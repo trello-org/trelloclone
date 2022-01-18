@@ -1,11 +1,13 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Npgsql;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,6 +33,14 @@ namespace TrelloClone
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "TrelloClone", Version = "v1" });
             });
+
+            var connectionString = Configuration["PostgreSql:ConnectionString"];
+            var dbPassword = Configuration["PostgreSql:DbPassword"];
+            var builder = new NpgsqlConnectionStringBuilder(connectionString)
+            {
+                Password = dbPassword
+            };
+            services.AddDbContext<ApplicationContext>(options => options.UseNpgsql(builder.ConnectionString));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
