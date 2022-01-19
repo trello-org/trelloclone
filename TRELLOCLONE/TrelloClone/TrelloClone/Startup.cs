@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TrelloClone.Services;
 
 namespace TrelloClone
 {
@@ -41,6 +42,7 @@ namespace TrelloClone
                 Password = dbPassword
             };
             services.AddDbContext<ApplicationContext>(options => options.UseNpgsql(builder.ConnectionString));
+            services.AddScoped<UserService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
