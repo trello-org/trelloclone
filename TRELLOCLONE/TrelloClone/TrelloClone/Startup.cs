@@ -44,6 +44,8 @@ namespace TrelloClone
             services.AddDbContext<ApplicationContext>(options => options.UseNpgsql(builder.ConnectionString));
             services.AddScoped<UserService>();
             services.AddScoped<BoardService>();
+            services.AddScoped<CardListService>();
+            services.AddScoped<CardService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
