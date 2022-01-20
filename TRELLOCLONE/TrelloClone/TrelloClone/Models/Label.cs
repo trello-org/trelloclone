@@ -20,6 +20,5 @@ namespace TrelloClone.Models
 		public string Name { get { return _name; } set { _name = value; } }
 		public string ColorHex { get { return _colorHex; } set { _colorHex = value; } }
 
-
 	}
 }

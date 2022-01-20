@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,13 +18,13 @@ namespace TrelloClone.Services
 
 		internal IEnumerable<User> GetAllUsers()
 		{
-			return _dbContext.Users;
+			return _dbContext.Users.Include(u => u.Boards);
 		}
 
 		internal void CreateUser(User user)
 		{
 			_dbContext.Add(user);
-			_dbContext.SaveChanges();
+			_dbContext.SaveChanges();		
 		}
 
 		internal void EditUser(Guid id, User user)
@@ -34,7 +35,27 @@ namespace TrelloClone.Services
 
 		internal void DeleteUser(Guid id)
 		{
-			_dbContext.Remove(_dbContext.Users.Single(u => u.Id == id));
+			User toBeRemoved = _dbContext.Users
+				.Where(u => u.Id == id)
+				.Include(b => b.Boards)
+				.ThenInclude(cl => cl.CardLists)
+				.ThenInclude(c => c.Cards)
+				.ThenInclude(l => l.Labels)
+				.FirstOrDefault();
+			foreach(Board b in toBeRemoved.Boards)
+			{
+				foreach(CardList cl in b.CardLists)
+				{
+					foreach(Card c in cl.Cards)
+					{
+						_dbContext.Labels.RemoveRange(c.Labels);
+					}
+					_dbContext.Cards.RemoveRange(cl.Cards);
+				}
+				_dbContext.CardLists.RemoveRange(b.CardLists);
+			}
+			_dbContext.Boards.RemoveRange(toBeRemoved.Boards);
+			_dbContext.Users.Remove(toBeRemoved);
 			_dbContext.SaveChanges();
 		}
 

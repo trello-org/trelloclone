@@ -22,12 +22,12 @@ namespace TrelloClone
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
-			modelBuilder.Entity<User>().Property(u => u.Username).IsRequired();
 			modelBuilder.Entity<User>().Property(u => u.Password).IsRequired();
 			modelBuilder.Entity<Board>().Property(b => b.Name).IsRequired();
 			modelBuilder.Entity<CardList>().Property(cl => cl.Name).IsRequired();
 			modelBuilder.Entity<Card>().Property(c => c.Name).IsRequired();
 			modelBuilder.Entity<Label>().Property(l => l.Name).IsRequired();
+
 		}
 	}
 }

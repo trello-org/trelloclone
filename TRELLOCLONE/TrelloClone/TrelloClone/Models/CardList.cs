@@ -20,6 +20,5 @@ namespace TrelloClone.Models
         public string Name { get { return _name; } set { _name = value; } }
         public IEnumerable<Card> Cards { get { return _cards; } set { _cards = value; } }
 
-
     }
 }
