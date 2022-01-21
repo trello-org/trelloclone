@@ -39,10 +39,17 @@ namespace TrelloClone.Services
 			_dbContext.SaveChanges();
 		}
 
-		internal void CreateCardListFoBoard(Guid boardId, CardList cardList)
+		internal void CreateCardListForBoard(Guid boardId, CardList cardList)
 		{
 			// not sure if I need to add it both to parent class and childCollection
-			_dbContext.Boards.Single(b => b.Id == boardId).CardLists.Append(cardList);
+			if (cardList.Cards == null) cardList.Cards = new List<Card>();
+
+			_dbContext.Boards
+				.Where(b => b.Id == boardId)
+				.Include(b => b.CardLists)
+				.First().CardLists
+				.Append(cardList);
+
 			_dbContext.SaveChanges();
 		}
 

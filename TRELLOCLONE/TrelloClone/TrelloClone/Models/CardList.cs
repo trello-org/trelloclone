@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace TrelloClone.Models
 {
+    [Table("cardlists")]
     public class CardList
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

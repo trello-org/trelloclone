@@ -23,6 +23,7 @@ namespace TrelloClone.Services
 
 		internal void CreateUser(User user)
 		{
+			if (user.Boards == null) user.Boards = new List<Board>();
 			_dbContext.Add(user);
 			_dbContext.SaveChanges();		
 		}
@@ -62,6 +63,17 @@ namespace TrelloClone.Services
 		internal User GetUserById(Guid id)
 		{
 			return _dbContext.Users.Single(u => u.Id == id);
+		}
+
+		internal IEnumerable<Board> GetAllBoardsForUser(Guid userId)
+		{
+			User user = _dbContext.Users
+				.Where(u => u.Id == userId)
+				.Include(u => u.Boards)
+				.FirstOrDefault();
+
+			return user.Boards;
+
 		}
 	}
 }

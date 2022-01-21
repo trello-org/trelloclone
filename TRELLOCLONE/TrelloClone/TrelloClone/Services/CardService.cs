@@ -19,7 +19,12 @@ namespace TrelloClone.Services
 
 		internal void CreateCardForCardList(Guid cardListId, Card card)
 		{
-			_dbContext.CardLists.Single(cl => cl.Id == cardListId).Cards.Append(card);
+			if (card.Labels == null) card.Labels = new List<Label>();
+			_dbContext.CardLists
+				.Where(cl => cl.Id == cardListId)
+				.Include(cl => cl.Cards)
+				.FirstOrDefault()
+				.Cards.Append(card);
 			_dbContext.SaveChanges();
 		}
 

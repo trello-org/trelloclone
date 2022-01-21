@@ -35,7 +35,7 @@ namespace TrelloClone.Controllers
 		[HttpPost("boardId")]
 		public void CreateCardListForBoard(Guid boardId, [FromBody] CardList cardList)
 		{
-			_cardListService.CreateCardListFoBoard(boardId, cardList);
+			_cardListService.CreateCardListForBoard(boardId, cardList);
 		}
 
 		

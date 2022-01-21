@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace TrelloClone.Models
 {
+	[Table("labels")]
 	public class Label
 	{
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]

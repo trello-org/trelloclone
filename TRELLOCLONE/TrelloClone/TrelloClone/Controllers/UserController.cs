@@ -35,6 +35,12 @@ namespace TrelloClone.Controllers
 			return _userService.GetUserById(id);
 		}
 
+		[HttpGet("boards/{userId}")]
+		public IEnumerable<Board> GetAllBoardsForUser(Guid userId)
+		{
+			return _userService.GetAllBoardsForUser(userId);
+		}
+
 		// POST api/users
 		[HttpPost]
 		public void Post([FromBody] User user)

@@ -23,24 +23,25 @@ namespace TrelloClone.Services
 
 		internal Board GetBoardById(Guid id)
 		{
-			return _dbContext.Boards.Where(b => b.Id == id).Include(b => b.CardLists).ThenInclude(cl => cl.Cards).ThenInclude(c => c.Labels).FirstOrDefault();
-		}
-
-		internal IEnumerable<Board> GetAllBoardsForUser(Guid userId)
-		{
-			User user = _dbContext.Users
-				.Where(u => u.Id == userId)
-				.Include(u => u.Boards)
+			return _dbContext.Boards
+				.Where(b => b.Id == id)
+				.Include(b => b.CardLists)
+				.ThenInclude(cl => cl.Cards)
+				.ThenInclude(c => c.Labels)
 				.FirstOrDefault();
-
-			return user.Boards;
-			
 		}
 
 		internal void CreateBoard(Guid userId, Board board)
 		{
-			_dbContext.Users.Single(u => u.Id == userId).Boards.Append(board);
-			_dbContext.Boards.Add(board);
+			if (board.CardLists == null) board.CardLists = new List<CardList>();
+			User user = _dbContext.Users
+				.Where(u => u.Id == userId)
+				.Include(u => u.Boards)
+				.FirstOrDefault();
+			user.Boards.Append(board);
+			_dbContext.Update(user);
+
+			//_dbContext.Boards.Add(board);
 			_dbContext.SaveChanges();
 		}
 
