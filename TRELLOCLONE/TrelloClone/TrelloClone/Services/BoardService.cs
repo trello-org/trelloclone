@@ -124,9 +124,13 @@ namespace TrelloClone.Services
 				NpgsqlParameter urlParam = new NpgsqlParameter("@url", NpgsqlTypes.NpgsqlDbType.Varchar, board.BackgroundUrl.Length);
 				urlParam.Value = board.BackgroundUrl;
 
+				NpgsqlParameter idParam = new NpgsqlParameter("@id", NpgsqlTypes.NpgsqlDbType.Bigint);
+				idParam.Value = board.UserId;
+
 				cm.Parameters.Add(nameParam);
 				cm.Parameters.Add(descParam);
 				cm.Parameters.Add(urlParam);
+				cm.Parameters.Add(idParam);
 
 				cm.Prepare();
 				cm.ExecuteNonQuery();
@@ -144,6 +148,27 @@ namespace TrelloClone.Services
 				NpgsqlParameter idParam = new NpgsqlParameter("@id", NpgsqlTypes.NpgsqlDbType.Bigint, 0);
 				idParam.Value = id;
 
+				cm.Parameters.Add(idParam);
+
+				cm.Prepare();
+				cm.ExecuteNonQuery();
+			}
+		}
+
+		internal void EditBoardVisibility(Board board)
+		{
+			using (var connection = new NpgsqlConnection(_connectionString))
+			{
+				connection.Open();
+				var cm = new NpgsqlCommand("UPDATE public.boards SET is_public = @is_public WHERE id = @id; ", connection);
+
+				NpgsqlParameter visibilityParam = new NpgsqlParameter("@name", NpgsqlTypes.NpgsqlDbType.Boolean);
+				visibilityParam.Value = board.IsPublic;
+
+				NpgsqlParameter idParam = new NpgsqlParameter("@id", NpgsqlTypes.NpgsqlDbType.Bigint);
+				idParam.Value = board.Id;
+
+				cm.Parameters.Add(visibilityParam);
 				cm.Parameters.Add(idParam);
 
 				cm.Prepare();
