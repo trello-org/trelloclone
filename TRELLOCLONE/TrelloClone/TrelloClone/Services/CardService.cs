@@ -70,5 +70,47 @@ namespace TrelloClone.Services
 		{
 			throw new NotImplementedException();
 		}
+
+		internal void AssignCard(CardAsigneeDto cardAsigneeDto)
+		{
+			using (var connection = new NpgsqlConnection(_connectionString))
+			{
+				connection.Open();
+				var cm = new NpgsqlCommand("INSERT INTO public.asignees(user_id, card_id) VALUES(@user_id, @card_id); ", connection);
+
+				NpgsqlParameter userIdParam = new NpgsqlParameter("@user_id", NpgsqlTypes.NpgsqlDbType.Bigint);
+				userIdParam.Value = cardAsigneeDto.UserId;
+
+				NpgsqlParameter cardIdParam = new NpgsqlParameter("@card_id", NpgsqlTypes.NpgsqlDbType.Bigint);
+				cardIdParam.Value = cardAsigneeDto.CardId;
+
+				cm.Parameters.Add(userIdParam);
+				cm.Parameters.Add(cardIdParam);
+
+				cm.Prepare();
+				cm.ExecuteNonQuery();
+			}
+		}
+
+		internal void RemoveAssigneeFromCard(CardAsigneeDto cardAsigneeDto)
+		{
+			using (var connection = new NpgsqlConnection(_connectionString))
+			{
+				connection.Open();
+				var cm = new NpgsqlCommand("delete from asignees where user_id = @user_id and card_id = @card_id;", connection);
+
+				NpgsqlParameter userIdParam = new NpgsqlParameter("@user_id", NpgsqlTypes.NpgsqlDbType.Bigint);
+				userIdParam.Value = cardAsigneeDto.UserId;
+
+				NpgsqlParameter cardIdParam = new NpgsqlParameter("@card_id", NpgsqlTypes.NpgsqlDbType.Bigint);
+				cardIdParam.Value = cardAsigneeDto.CardId;
+
+				cm.Parameters.Add(userIdParam);
+				cm.Parameters.Add(cardIdParam);
+
+				cm.Prepare();
+				cm.ExecuteNonQuery();
+			}
+		}
 	}
 }
