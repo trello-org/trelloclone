@@ -12,14 +12,15 @@ namespace TrelloClone.Models
 	{
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		[Key]
-		private Guid _id;
+		private long _id;
 		[Required]
 		private string _name;
 		private string _colorHex;
+		private long _cardId;
 
-		public Guid Id { get { return _id; } set { _id = value; } }
+		public long Id { get { return _id; } set { _id = value; } }
 		public string Name { get { return _name; } set { _name = value; } }
 		public string ColorHex { get { return _colorHex; } set { _colorHex = value; } }
-
+		public long CardId { get { return _cardId; } set { _cardId = value; } }
 	}
 }

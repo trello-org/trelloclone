@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Npgsql;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,10 +12,13 @@ namespace TrelloClone.Services
 	public class CardListService
 	{
 		private readonly ApplicationContext _dbContext;
+		private readonly IConfiguration _configuration;
+		private readonly string _connectionString;
 
-		public CardListService(ApplicationContext dbContext)
+		public CardListService(IConfiguration configuration)
 		{
-			_dbContext = dbContext;
+			_configuration = configuration;
+			_connectionString = _configuration["PostgreSql:ConnectionStringADO"];
 		}
 
 		internal void UpdateCardList(CardList cardList)
@@ -22,35 +27,42 @@ namespace TrelloClone.Services
 			_dbContext.SaveChanges();
 		}
 
-		internal void DeleteCardList(Guid id)
+		internal void DeleteCardList(long id)
 		{
-			CardList toBeRemoved = _dbContext.CardLists.
-				Where(cl => cl.Id == id)
-				.Include(cl => cl.Cards)
-				.ThenInclude(c => c.Labels)
-				.FirstOrDefault();
-
-			foreach(Card c in toBeRemoved.Cards)
+			using (var connection = new NpgsqlConnection(_connectionString))
 			{
-				_dbContext.Labels.RemoveRange(c.Labels);
+				connection.Open();
+				var cm = new NpgsqlCommand("delete from cardlists where id = @id;", connection);
+
+				NpgsqlParameter idParam = new NpgsqlParameter("@id", NpgsqlTypes.NpgsqlDbType.Bigint);
+				idParam.Value = id;
+
+				cm.Parameters.Add(id);
+
+				cm.Prepare();
+				cm.ExecuteNonQuery();
 			}
-			_dbContext.Cards.RemoveRange(toBeRemoved.Cards);
-			_dbContext.CardLists.Remove(toBeRemoved);
-			_dbContext.SaveChanges();
 		}
 
-		internal void CreateCardListForBoard(Guid boardId, CardList cardList)
+		internal void CreateCardListForBoard(long boardId, CardList cardList)
 		{
-			// not sure if I need to add it both to parent class and childCollection
-			if (cardList.Cards == null) cardList.Cards = new List<Card>();
+			using (var connection = new NpgsqlConnection(_connectionString))
+			{
+				connection.Open();
+				var cm = new NpgsqlCommand("INSERT INTO public.cardlists(name, board_id) VALUES (@name, @board_id);", connection);
 
-			_dbContext.Boards
-				.Where(b => b.Id == boardId)
-				.Include(b => b.CardLists)
-				.First().CardLists
-				.Append(cardList);
+				NpgsqlParameter nameParam = new NpgsqlParameter("@name", NpgsqlTypes.NpgsqlDbType.Varchar, cardList.Name.Length);
+				nameParam.Value = cardList.Name;
 
-			_dbContext.SaveChanges();
+				NpgsqlParameter idParam = new NpgsqlParameter("@url", NpgsqlTypes.NpgsqlDbType.Bigint);
+				idParam.Value = boardId;
+
+				cm.Parameters.Add(nameParam);
+				cm.Parameters.Add(idParam);
+
+				cm.Prepare();
+				cm.ExecuteNonQuery();
+			}
 		}
 
 		

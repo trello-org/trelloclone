@@ -27,7 +27,7 @@ namespace TrelloClone.Controllers
 		}
 		
 		[HttpDelete("{id}")]
-		public void DeleteLabel(Guid id)
+		public void DeleteLabel(long id)
 		{
 			_labelService.DeleteLabel(id);
 		}

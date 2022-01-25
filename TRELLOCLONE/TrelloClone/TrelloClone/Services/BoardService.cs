@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Npgsql;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,68 +12,143 @@ namespace TrelloClone.Services
 	public class BoardService
 	{
 		private readonly ApplicationContext _dbContext;
+		private readonly IConfiguration _configuration;
+		private readonly string _connectionString;
 
-		public BoardService(ApplicationContext dbContext)
+		public BoardService(IConfiguration configuration)
 		{
-			_dbContext = dbContext;
+			_configuration = configuration;
+			_connectionString = _configuration["PostgreSql:ConnectionStringADO"];
 		}
 
-		internal IEnumerable<Board> GetAllBoardsForUser()
+		internal IEnumerable<Board> GetAllBoardsForUser(long id)
 		{
-			return _dbContext.Boards;
+			var retList = new List<Board>();
+			using (var connection = new NpgsqlConnection(_connectionString))
+			{
+				var cm = new NpgsqlCommand("select * from boards where user_id = @id", connection);
+
+				NpgsqlParameter idParam = new NpgsqlParameter("@id", NpgsqlTypes.NpgsqlDbType.Bigint, (int)id);
+				idParam.Value = id;
+				cm.Parameters.Add(idParam);
+
+				connection.Open();
+
+				NpgsqlDataReader sdr = cm.ExecuteReader();
+				while (sdr.Read())
+				{
+					Console.WriteLine(sdr["Id"] + " " + sdr["Username"]);
+					retList.Add(new Board
+					{
+						Name = (string)sdr["name"],
+						BackgroundUrl = (string)sdr["background_url"],
+						Id = (long)sdr["id"],
+						Description = (string)sdr["description"]
+					}) ;
+				}
+			}
+
+			return retList;
 		}
 
-		internal Board GetBoardById(Guid id)
+		internal Board GetBoardById(long id)
 		{
-			return _dbContext.Boards
-				.Where(b => b.Id == id)
-				.Include(b => b.CardLists)
-				.ThenInclude(cl => cl.Cards)
-				.ThenInclude(c => c.Labels)
-				.FirstOrDefault();
+			using (var connection = new NpgsqlConnection(_connectionString))
+			{
+				var cm = new NpgsqlCommand("select * from boards where id = @id", connection);
+
+				NpgsqlParameter idParam = new NpgsqlParameter("@id", NpgsqlTypes.NpgsqlDbType.Bigint, (int)id);
+				idParam.Value = id;
+				cm.Parameters.Add(idParam);
+
+				connection.Open();
+
+				NpgsqlDataReader sdr = cm.ExecuteReader();
+				while (sdr.Read())
+				{
+					Console.WriteLine(sdr["Id"] + " " + sdr["Username"]);
+					return new Board
+					{
+						Name = (string)sdr["name"],
+						BackgroundUrl = (string)sdr["background_url"],
+						Id = (long)sdr["id"],
+						Description = (string)sdr["description"]
+					};
+				}
+			}
+			return null;
 		}
 
-		internal void CreateBoard(Guid userId, Board board)
+		internal void CreateBoard(long userId, Board board)
 		{
-			if (board.CardLists == null) board.CardLists = new List<CardList>();
-			User user = _dbContext.Users
-				.Where(u => u.Id == userId)
-				.Include(u => u.Boards)
-				.FirstOrDefault();
-			user.Boards.Append(board);
-			_dbContext.Update(user);
+			using (var connection = new NpgsqlConnection(_connectionString))
+			{
+				connection.Open();
+				var cm = new NpgsqlCommand("insert into board (name, description, background_url, user_id) values (@name, @desc, @url, @user_id)", connection);
 
-			//_dbContext.Boards.Add(board);
-			_dbContext.SaveChanges();
+				NpgsqlParameter nameParam = new NpgsqlParameter("@name", NpgsqlTypes.NpgsqlDbType.Varchar, board.Name.Length);
+				nameParam.Value = board.Name;
+
+				NpgsqlParameter descParam = new NpgsqlParameter("@desc", NpgsqlTypes.NpgsqlDbType.Varchar, board.Description.Length);
+				descParam.Value = board.Description;
+
+				NpgsqlParameter userParam = new NpgsqlParameter("@user_id", NpgsqlTypes.NpgsqlDbType.Bigint, (int)userId);
+				userParam.Value = board.Description;
+
+				NpgsqlParameter urlParam = new NpgsqlParameter("@url", NpgsqlTypes.NpgsqlDbType.Varchar, board.BackgroundUrl.Length);
+				urlParam.Value = board.BackgroundUrl;
+
+				cm.Parameters.Add(nameParam);
+				cm.Parameters.Add(descParam);
+				cm.Parameters.Add(userParam);
+				cm.Parameters.Add(urlParam);
+
+				cm.Prepare();
+				cm.ExecuteNonQuery();
+			}
 		}
 
 		internal void EditBoard(Board board)
 		{
-			_dbContext.Update(board);
-			_dbContext.SaveChanges();
+			using (var connection = new NpgsqlConnection(_connectionString))
+			{
+				connection.Open();
+				var cm = new NpgsqlCommand("UPDATE public.boardsSET name = @name, description = @desc, background_url = @url WHERE user_id = @id; ", connection);
+
+				NpgsqlParameter nameParam = new NpgsqlParameter("@name", NpgsqlTypes.NpgsqlDbType.Varchar, board.Name.Length);
+				nameParam.Value = board.Name;
+
+				NpgsqlParameter descParam = new NpgsqlParameter("@desc", NpgsqlTypes.NpgsqlDbType.Varchar, board.Description.Length);
+				descParam.Value = board.Description;
+
+				NpgsqlParameter urlParam = new NpgsqlParameter("@url", NpgsqlTypes.NpgsqlDbType.Varchar, board.BackgroundUrl.Length);
+				urlParam.Value = board.BackgroundUrl;
+
+				cm.Parameters.Add(nameParam);
+				cm.Parameters.Add(descParam);
+				cm.Parameters.Add(urlParam);
+
+				cm.Prepare();
+				cm.ExecuteNonQuery();
+			}
 		}
 
-		internal void DeleteBoard(Guid id)
+		internal void DeleteBoard(long id)
 		{
-			Board toBeRemoved = _dbContext.Boards
-				.Where(b => b.Id == id)
-				.Include(b => b.CardLists)
-				.ThenInclude(cl => cl.Cards)
-				.ThenInclude(c => c.Labels)
-				.FirstOrDefault();
 
-			foreach (CardList cl in toBeRemoved.CardLists)
+			using (var connection = new NpgsqlConnection(_connectionString))
 			{
-				foreach (Card c in cl.Cards)
-				{
-					_dbContext.Labels.RemoveRange(c.Labels);
-				}
-				_dbContext.Cards.RemoveRange(cl.Cards);
-			}
-			_dbContext.CardLists.RemoveRange(toBeRemoved.CardLists);
-			_dbContext.Boards.Remove(toBeRemoved);
-			_dbContext.SaveChanges();
+				connection.Open();
+				var cm = new NpgsqlCommand("delete from boards where id = @id", connection);
 
+				NpgsqlParameter idParam = new NpgsqlParameter("@id", NpgsqlTypes.NpgsqlDbType.Bigint, 0);
+				idParam.Value = id;
+
+				cm.Parameters.Add(idParam);
+
+				cm.Prepare();
+				cm.ExecuteNonQuery();
+			}
 		}
 	}
 }

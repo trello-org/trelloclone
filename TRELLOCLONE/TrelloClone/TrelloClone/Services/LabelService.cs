@@ -21,7 +21,7 @@ namespace TrelloClone.Services
 			_dbContext.SaveChanges();
 		}
 
-		internal void DeleteLabel(Guid id)
+		internal void DeleteLabel(long id)
 		{
 			_dbContext.Labels.Remove(_dbContext.Labels.Single(l => l.Id == id));
 			_dbContext.SaveChanges();

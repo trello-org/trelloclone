@@ -34,7 +34,7 @@ namespace TrelloClone
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "TrelloClone", Version = "v1" });
             });
-
+            /*
             var connectionString = Configuration["PostgreSql:ConnectionString"];
             var dbPassword = Configuration["PostgreSql:DbPassword"];
             var builder = new NpgsqlConnectionStringBuilder(connectionString)
@@ -42,10 +42,11 @@ namespace TrelloClone
                 Password = dbPassword
             };
             services.AddDbContext<ApplicationContext>(options => options.UseNpgsql(builder.ConnectionString));
+            */
             services.AddScoped<UserService>();
             services.AddScoped<BoardService>();
-            services.AddScoped<CardListService>();
-            services.AddScoped<CardService>();
+            //services.AddScoped<CardListService>();
+            //services.AddScoped<CardService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

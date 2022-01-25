@@ -48,14 +48,38 @@ namespace TrelloClone.Controllers
 					retList.Add(new User
 					{
 						Username = (string)sdr["Username"],
-						Id = (Guid)sdr["Id"]
+						Id = (long)sdr["Id"]
 					});
 				}
 			}
 
 			return retList;
 		}
+		
+		// note this is just a test endpoint passing data to Post should be done through body
+		[HttpPost("users/{username}")]
+		public void CreateNewUser(String username)
+		{
+			User toCreate = new User();
+			toCreate.Username = username;
+			using (var connection = new NpgsqlConnection(connectionString))
+			{
+				connection.Open();
+				var cm = new NpgsqlCommand("insert into users (Username) values (@username)", connection);
 
+				NpgsqlParameter usernameParam = new NpgsqlParameter("@username", NpgsqlTypes.NpgsqlDbType.Varchar, username.Length);
+				usernameParam.Value = username;
+
+				cm.Parameters.Add(usernameParam);
+
+				cm.Prepare();
+				cm.ExecuteNonQuery();
+
+				
+
+
+			}
+		}
 		// POST api/<AdoController>
 		[HttpPost]
 		public void Post([FromBody] string value)

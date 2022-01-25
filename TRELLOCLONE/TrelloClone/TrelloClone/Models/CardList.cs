@@ -12,14 +12,16 @@ namespace TrelloClone.Models
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
-        private Guid _id;
+        private long _id;
         [Required]
         private string _name;
-        private IEnumerable<Card> _cards;
+        //private IEnumerable<Card> _cards;
+        private long _boardId;
 
-        public Guid Id { get { return _id; } set { _id = value; } }
+        public long Id { get { return _id; } set { _id = value; } }
         public string Name { get { return _name; } set { _name = value; } }
-        public IEnumerable<Card> Cards { get { return _cards; } set { _cards = value; } }
+        public long BoardId { get { return _boardId; } set { _boardId = value; } }
+        // public IEnumerable<Card> Cards { get { return _cards; } set { _cards = value; } }
 
     }
 }

@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Npgsql;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,70 +12,122 @@ namespace TrelloClone.Services
 	public class UserService
 	{
 		private readonly ApplicationContext _dbContext;
+		private readonly IConfiguration _configuration;
+		private readonly string _connectionString;
 
-		public UserService(ApplicationContext dbContext)
+		public UserService(IConfiguration configuration)
 		{
-			_dbContext = dbContext;
+
+			_configuration = configuration;
+			_connectionString = _configuration["PostgreSql:ConnectionStringADO"];
 		}
 
 		internal IEnumerable<User> GetAllUsers()
 		{
-			return _dbContext.Users.Include(u => u.Boards);
+			var retList = new List<User>();
+			using (var connection = new NpgsqlConnection(_connectionString))
+			{
+				var cm = new NpgsqlCommand("select * from users", connection);
+
+				connection.Open();
+
+				NpgsqlDataReader sdr = cm.ExecuteReader();
+				while (sdr.Read())
+				{
+					Console.WriteLine(sdr["Id"] + " " + sdr["Username"]);
+					retList.Add(new User
+					{
+						Username = (string)sdr["Username"],
+						Id = (long)sdr["Id"]
+					});
+				}
+			}
+
+			return retList;
 		}
 
 		internal void CreateUser(User user)
 		{
-			if (user.Boards == null) user.Boards = new List<Board>();
-			_dbContext.Add(user);
-			_dbContext.SaveChanges();		
-		}
-
-		internal void EditUser(Guid id, User user)
-		{
-			_dbContext.Update(user);
-			_dbContext.SaveChanges();
-		}
-
-		internal void DeleteUser(Guid id)
-		{
-			User toBeRemoved = _dbContext.Users
-				.Where(u => u.Id == id)
-				.Include(b => b.Boards)
-				.ThenInclude(cl => cl.CardLists)
-				.ThenInclude(c => c.Cards)
-				.ThenInclude(l => l.Labels)
-				.FirstOrDefault();
-			foreach(Board b in toBeRemoved.Boards)
+			//if (user.Boards == null) user.Boards = new List<Board>();
+			//_dbContext.Add(user);
+			//_dbContext.SaveChanges();	
+			using (var connection = new NpgsqlConnection(_connectionString))
 			{
-				foreach(CardList cl in b.CardLists)
-				{
-					foreach(Card c in cl.Cards)
-					{
-						_dbContext.Labels.RemoveRange(c.Labels);
-					}
-					_dbContext.Cards.RemoveRange(cl.Cards);
-				}
-				_dbContext.CardLists.RemoveRange(b.CardLists);
+				connection.Open();
+				var cm = new NpgsqlCommand("insert into users (username, password) values (@username, @password)", connection);
+
+				NpgsqlParameter usernameParam = new NpgsqlParameter("@username", NpgsqlTypes.NpgsqlDbType.Varchar, user.Username.Length);
+				NpgsqlParameter passwordParam = new NpgsqlParameter("@password", NpgsqlTypes.NpgsqlDbType.Varchar, user.Password.Length);
+				usernameParam.Value = user.Username;
+				passwordParam.Value = user.Password;
+
+				cm.Parameters.Add(usernameParam);
+				cm.Parameters.Add(passwordParam);
+
+				cm.Prepare();
+				cm.ExecuteNonQuery();
 			}
-			_dbContext.Boards.RemoveRange(toBeRemoved.Boards);
-			_dbContext.Users.Remove(toBeRemoved);
-			_dbContext.SaveChanges();
 		}
 
-		internal User GetUserById(Guid id)
+		internal void EditUser(User user)
 		{
-			return _dbContext.Users.Single(u => u.Id == id);
+			//_dbContext.Update(user);
+			//_dbContext.SaveChanges();
+			using (var connection = new NpgsqlConnection(_connectionString))
+			{
+				connection.Open();
+				var cm = new NpgsqlCommand("UPDATE public.users SET username =@username, password = @password WHERE id= @id; ", connection);
+
+				NpgsqlParameter usernameParam = new NpgsqlParameter("@username", NpgsqlTypes.NpgsqlDbType.Varchar, user.Username.Length);
+				NpgsqlParameter passwordParam = new NpgsqlParameter("@password", NpgsqlTypes.NpgsqlDbType.Varchar, user.Password.Length);
+				NpgsqlParameter idParam = new NpgsqlParameter("@id", NpgsqlTypes.NpgsqlDbType.Bigint, (int)user.Id);
+				usernameParam.Value = user.Username;
+				passwordParam.Value = user.Password;
+				idParam.Value = user.Id;
+
+				cm.Parameters.Add(usernameParam);
+				cm.Parameters.Add(passwordParam);
+				cm.Parameters.Add(idParam);
+
+				cm.Prepare();
+				cm.ExecuteNonQuery();
+			}
+
 		}
 
-		internal IEnumerable<Board> GetAllBoardsForUser(Guid userId)
+		internal void DeleteUser(long id)
 		{
-			User user = _dbContext.Users
-				.Where(u => u.Id == userId)
-				.Include(u => u.Boards)
-				.FirstOrDefault();
+			throw new NotImplementedException();
+		}
 
-			return user.Boards;
+		internal User GetUserById(long id)
+		{
+			
+			using (var connection = new NpgsqlConnection(_connectionString))
+			{
+				var cm = new NpgsqlCommand("select * from users where id = @id", connection);
+				NpgsqlParameter idParam = new NpgsqlParameter("@id", NpgsqlTypes.NpgsqlDbType.Bigint, (int)id);
+				idParam.Value = id;
+				connection.Open();
 
+				NpgsqlDataReader sdr = cm.ExecuteReader();
+				while (sdr.Read())
+				{
+					Console.WriteLine(sdr["Id"] + " " + sdr["Username"]);
+					return new User
+					{
+						Username = (string)sdr["Username"],
+						Id = (long)sdr["Id"],
+						Password = (string)sdr["Password"]
+					};
+				}
+			}
+			return null;
+		}
+
+		internal IEnumerable<Board> GetAllBoardsForUser(long userId)
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,13 +31,13 @@ namespace TrelloClone.Controllers
 
 		// GET api/users/5
 		[HttpGet("{id}")]
-		public User GetUserById(Guid id)
+		public User GetUserById(long id)
 		{
 			return _userService.GetUserById(id);
 		}
 
 		[HttpGet("boards/{userId}")]
-		public IEnumerable<Board> GetAllBoardsForUser(Guid userId)
+		public IEnumerable<Board> GetAllBoardsForUser(long userId)
 		{
 			return _userService.GetAllBoardsForUser(userId);
 		}
@@ -50,14 +51,14 @@ namespace TrelloClone.Controllers
 
 		// PUT api/users
 		[HttpPut]
-		public void Put(Guid id, [FromBody] User user)
+		public void Put([FromBody] User user)
 		{
-			_userService.EditUser(id, user);
+			_userService.EditUser(user);
 		}
 
 		// DELETE api/users/5
 		[HttpDelete("{id}")]
-		public void Delete(Guid id)
+		public void Delete(long id)
 		{
 			_userService.DeleteUser(id);
 		}

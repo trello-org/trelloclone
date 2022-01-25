@@ -23,15 +23,15 @@ namespace TrelloClone.Controllers
 		}
 
 		// GET: api/boards
-		[HttpGet]
-		public IEnumerable<Board> GetAllBoards()
+		[HttpGet("users/{id}")]
+		public IEnumerable<Board> GetAllBoards(long id)
 		{
-			return _boardService.GetAllBoardsForUser(); 
+			return _boardService.GetAllBoardsForUser(id); 
 		}
 
 		// GET api/boards/5
 		[HttpGet("{id}")]
-		public Board Get(Guid id)
+		public Board Get(long id)
 		{
 			return _boardService.GetBoardById(id);
 		}
@@ -40,7 +40,7 @@ namespace TrelloClone.Controllers
 
 		// POST api/boards
 		[HttpPost("{userId}")]
-		public void Post(Guid userId, [FromBody] Board board)
+		public void Post(long userId, [FromBody] Board board)
 		{
 			_boardService.CreateBoard(userId, board);
 		}
@@ -54,7 +54,7 @@ namespace TrelloClone.Controllers
 
 		// DELETE api/<BoardController>/5
 		[HttpDelete("{id}")]
-		public void Delete(Guid id) 
+		public void Delete(long id) 
 		{
 			_boardService.DeleteBoard(id);
 		}

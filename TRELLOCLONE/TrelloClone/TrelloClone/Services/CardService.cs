@@ -17,39 +17,24 @@ namespace TrelloClone.Services
 			_dbContext = dbContext;
 		}
 
-		internal void CreateCardForCardList(Guid cardListId, Card card)
+		internal void CreateCardForCardList(long cardListId, Card card)
 		{
-			if (card.Labels == null) card.Labels = new List<Label>();
-			_dbContext.CardLists
-				.Where(cl => cl.Id == cardListId)
-				.Include(cl => cl.Cards)
-				.FirstOrDefault()
-				.Cards.Append(card);
-			_dbContext.SaveChanges();
+			
 		}
 
 		internal void DeleteCard(Guid id)
 		{
-			Card toBeRemoved = _dbContext.Cards.Where(c => c.Id == id).Include(c => c.Labels).FirstOrDefault();
-			_dbContext.Labels.RemoveRange(toBeRemoved.Labels);
-			_dbContext.Cards.Remove(toBeRemoved);
-			_dbContext.SaveChanges();
+			throw new NotImplementedException();
 		}
 
 		internal void AddLabelToCard(CardLabelDto cardLabelDto)
 		{
-			Card card = _dbContext.Cards.Where(c => c.Id == cardLabelDto.CardId).Include(c => c.Labels).FirstOrDefault();
-			Label label = _dbContext.Labels.Single(l => l.Id == cardLabelDto.LabelId);
-
-			card.Labels.Append(label);
-			_dbContext.Cards.Update(card);
-			_dbContext.SaveChanges();
+			throw new NotImplementedException();
 		}
 
 		internal void DeleteCardNoCascade(Guid id)
 		{
-			_dbContext.Cards.Remove(_dbContext.Cards.Single(c => c.Id == id));
-			_dbContext.SaveChanges();
+			throw new NotImplementedException();
 		}
 	}
 }
