@@ -28,7 +28,7 @@ namespace TrelloClone.Controllers
 		}
 
 		[HttpDelete("{id}")]
-		public void DeleteCard(Guid id)
+		public void DeleteCard(long id)
 		{
 			_cardService.DeleteCard(id);
 		}

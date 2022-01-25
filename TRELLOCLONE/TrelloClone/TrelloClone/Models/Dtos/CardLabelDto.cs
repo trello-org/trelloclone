@@ -7,7 +7,7 @@ namespace TrelloClone.Models.Dtos
 {
 	public class CardLabelDto
 	{
-		public Guid LabelId { get; set; }
-		public Guid CardId { get; set; }
+		public long LabelId { get; set; }
+		public long CardId { get; set; }
 	}
 }

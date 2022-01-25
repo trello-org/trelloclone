@@ -28,7 +28,7 @@ namespace TrelloClone.Services
 			{
 				var cm = new NpgsqlCommand("select * from boards where user_id = @id", connection);
 
-				NpgsqlParameter idParam = new NpgsqlParameter("@id", NpgsqlTypes.NpgsqlDbType.Bigint, (int)id);
+				NpgsqlParameter idParam = new NpgsqlParameter("@id", NpgsqlTypes.NpgsqlDbType.Bigint);
 				idParam.Value = id;
 				cm.Parameters.Add(idParam);
 
@@ -113,7 +113,7 @@ namespace TrelloClone.Services
 			using (var connection = new NpgsqlConnection(_connectionString))
 			{
 				connection.Open();
-				var cm = new NpgsqlCommand("UPDATE public.boardsSET name = @name, description = @desc, background_url = @url WHERE user_id = @id; ", connection);
+				var cm = new NpgsqlCommand("UPDATE public.boards SET name = @name, description = @desc, background_url = @url WHERE user_id = @id; ", connection);
 
 				NpgsqlParameter nameParam = new NpgsqlParameter("@name", NpgsqlTypes.NpgsqlDbType.Varchar, board.Name.Length);
 				nameParam.Value = board.Name;

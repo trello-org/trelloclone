@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Npgsql;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,20 +13,52 @@ namespace TrelloClone.Services
 	public class CardService
 	{
 		private readonly ApplicationContext _dbContext;
+		private readonly IConfiguration _configuration;
+		private readonly string _connectionString;
 
-		public CardService(ApplicationContext dbContext)
+		public CardService(IConfiguration configuration)
 		{
-			_dbContext = dbContext;
+			_configuration = configuration;
+			_connectionString = _configuration["PostgreSql:ConnectionStringADO"];
 		}
 
 		internal void CreateCardForCardList(long cardListId, Card card)
 		{
-			
+			using (var connection = new NpgsqlConnection(_connectionString))
+			{
+				connection.Open();
+				var cm = new NpgsqlCommand("INSERT INTO public.cards(name, description, card_list_id) VALUES(@name, @desc, @id); ", connection);
+
+				NpgsqlParameter nameParam = new NpgsqlParameter("@name", NpgsqlTypes.NpgsqlDbType.Varchar, card.Name.Length);
+				nameParam.Value = card.Name;
+
+				NpgsqlParameter descParam = new NpgsqlParameter("@desc", NpgsqlTypes.NpgsqlDbType.Varchar, card.Description.Length);
+				descParam.Value = card.Description;
+
+				NpgsqlParameter cardListIdParam = new NpgsqlParameter("@id", NpgsqlTypes.NpgsqlDbType.Bigint);
+				cardListIdParam.Value = card.CardListId;
+
+				cm.Parameters.Add(nameParam);
+				cm.Parameters.Add(descParam);
+				cm.Parameters.Add(cardListIdParam);
+
+				cm.Prepare();
+				cm.ExecuteNonQuery();
+			}
 		}
 
-		internal void DeleteCard(Guid id)
+		internal void DeleteCard(long id)
 		{
-			throw new NotImplementedException();
+			using (var connection = new NpgsqlConnection(_connectionString))
+			{
+				connection.Open();
+				var cm = new NpgsqlCommand("delete from cards where id = @id;", connection);
+
+				cm.Parameters.AddWithValue("@id", id);
+
+				cm.Prepare();
+				cm.ExecuteNonQuery();
+			}
 		}
 
 		internal void AddLabelToCard(CardLabelDto cardLabelDto)

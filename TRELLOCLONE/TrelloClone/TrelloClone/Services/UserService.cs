@@ -38,7 +38,8 @@ namespace TrelloClone.Services
 					retList.Add(new User
 					{
 						Username = (string)sdr["Username"],
-						Id = (long)sdr["Id"]
+						Id = (long)sdr["Id"],
+						Password = (string)sdr["Password"]
 					});
 				}
 			}
@@ -80,7 +81,7 @@ namespace TrelloClone.Services
 
 				NpgsqlParameter usernameParam = new NpgsqlParameter("@username", NpgsqlTypes.NpgsqlDbType.Varchar, user.Username.Length);
 				NpgsqlParameter passwordParam = new NpgsqlParameter("@password", NpgsqlTypes.NpgsqlDbType.Varchar, user.Password.Length);
-				NpgsqlParameter idParam = new NpgsqlParameter("@id", NpgsqlTypes.NpgsqlDbType.Bigint, (int)user.Id);
+				NpgsqlParameter idParam = new NpgsqlParameter("@id", NpgsqlTypes.NpgsqlDbType.Bigint);
 				usernameParam.Value = user.Username;
 				passwordParam.Value = user.Password;
 				idParam.Value = user.Id;
@@ -97,7 +98,18 @@ namespace TrelloClone.Services
 
 		internal void DeleteUser(long id)
 		{
-			throw new NotImplementedException();
+			using (var connection = new NpgsqlConnection(_connectionString))
+			{
+				connection.Open();
+				var cm = new NpgsqlCommand("delete from users where id = @id; ", connection);
+
+				NpgsqlParameter idParam = new NpgsqlParameter("@id", NpgsqlTypes.NpgsqlDbType.Bigint);
+				idParam.Value = id;
+				cm.Parameters.Add(idParam);
+
+				cm.Prepare();
+				cm.ExecuteNonQuery();
+			}
 		}
 
 		internal User GetUserById(long id)

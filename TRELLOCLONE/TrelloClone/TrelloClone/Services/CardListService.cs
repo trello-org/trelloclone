@@ -23,8 +23,23 @@ namespace TrelloClone.Services
 
 		internal void UpdateCardList(CardList cardList)
 		{
-			_dbContext.CardLists.Update(cardList);
-			_dbContext.SaveChanges();
+			using (var connection = new NpgsqlConnection(_connectionString))
+			{
+				connection.Open();
+				var cm = new NpgsqlCommand("UPDATE cardlists SET name = @name WHERE id = @id; ", connection);
+
+				NpgsqlParameter nameParam = new NpgsqlParameter("@name", NpgsqlTypes.NpgsqlDbType.Varchar, cardList.Name.Length);
+				nameParam.Value = cardList.Name;
+
+				NpgsqlParameter idParam = new NpgsqlParameter("@id", NpgsqlTypes.NpgsqlDbType.Bigint);
+				idParam.Value = cardList.Id;
+
+				cm.Parameters.Add(nameParam);
+				cm.Parameters.Add(idParam);
+
+				cm.Prepare();
+				cm.ExecuteNonQuery();
+			};
 		}
 
 		internal void DeleteCardList(long id)
