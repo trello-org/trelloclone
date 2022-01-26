@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Repository": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "adoString": "\"ConnectionStringADO\": \"server=localhost;port=5432;userid=postgres;password=root;database=trello;\""
+      }
+    }
+  }
+}

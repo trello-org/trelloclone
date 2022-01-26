@@ -7,21 +7,22 @@ using System.Threading.Tasks;
 
 namespace TrelloClone.Models
 {
-    [Table("cardlists")]
-    public class CardList
+    [Table("cards")]
+    public class Card
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
         private long _id;
         [Required]
         private string _name;
-        //private IEnumerable<Card> _cards;
-        private long _boardId;
+        private string _description;
+        private IEnumerable<Label> _labels;
+        private long _cardListId;
 
         public long Id { get { return _id; } set { _id = value; } }
         public string Name { get { return _name; } set { _name = value; } }
-        public long BoardId { get { return _boardId; } set { _boardId = value; } }
-        // public IEnumerable<Card> Cards { get { return _cards; } set { _cards = value; } }
-
+        public string Description { get { return _description; } set { _description = value; } }
+        public IEnumerable<Label> Labels { get { return _labels; } set { _labels = value; } }
+        public long CardListId { get { return _cardListId; } set { _cardListId = value; } }
+        }
     }
-}

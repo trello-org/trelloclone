@@ -18,7 +18,7 @@ namespace TrelloClone.Models
         private string _description;
         private string _backgroundUrl;
         private bool _isPublic;
-        // private IEnumerable<CardList> _cardLists;
+        private IEnumerable<CardList> _cardLists;
         private long _userId;
 
         public long Id { get { return _id; } set { _id = value; } }
@@ -27,6 +27,6 @@ namespace TrelloClone.Models
         public string BackgroundUrl { get { return _backgroundUrl; } set { _backgroundUrl = value; } }
         public long UserId {  get { return _userId; } set { _userId = value; } }
         public bool IsPublic { get { return _isPublic; } set { _isPublic = value; } }
-       // public IEnumerable<CardList> CardLists { get { return _cardLists; } set { _cardLists = value; } }
+        public IEnumerable<CardList> CardLists { get { return _cardLists; } set { _cardLists = value; } }
     }
 }

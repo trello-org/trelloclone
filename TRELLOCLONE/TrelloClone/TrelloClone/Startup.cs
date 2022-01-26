@@ -8,11 +8,13 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Npgsql;
+using Repository.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TrelloClone.Services;
+using TrelloClone.Utils;
 
 namespace TrelloClone
 {
@@ -34,7 +36,7 @@ namespace TrelloClone
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "TrelloClone", Version = "v1" });
             });
-            /*
+        
             var connectionString = Configuration["PostgreSql:ConnectionString"];
             var dbPassword = Configuration["PostgreSql:DbPassword"];
             var builder = new NpgsqlConnectionStringBuilder(connectionString)
@@ -42,7 +44,12 @@ namespace TrelloClone
                 Password = dbPassword
             };
             services.AddDbContext<ApplicationContext>(options => options.UseNpgsql(builder.ConnectionString));
-            */
+          
+            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IBoardRepository>();
+            services.AddTransient<ICardListRepository>();
+            services.AddTransient<ICardRepository>();
+            services.AddTransient<ICardLabelRepository>();
             services.AddScoped<UserService>();
             services.AddScoped<BoardService>();
             //services.AddScoped<CardListService>();
