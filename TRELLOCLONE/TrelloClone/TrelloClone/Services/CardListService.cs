@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Npgsql;
+using Repository.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,19 +12,16 @@ namespace TrelloClone.Services
 {
 	public class CardListService
 	{
-		private readonly ApplicationContext _dbContext;
-		private readonly IConfiguration _configuration;
-		private readonly string _connectionString;
+		private readonly ICardListRepository _cardListRepository;
 
-		public CardListService(IConfiguration configuration)
+		public CardListService(ICardListRepository cardListRepository)
 		{
-			_configuration = configuration;
-			_connectionString = _configuration["PostgreSql:ConnectionStringADO"];
+			_cardListRepository = cardListRepository;
 		}
 
 		internal void UpdateCardList(CardList cardList)
 		{
-			using (var connection = new NpgsqlConnection(_connectionString))
+			/*using (var connection = new NpgsqlConnection(_connectionString))
 			{
 				connection.Open();
 				var cm = new NpgsqlCommand("UPDATE cardlists SET name = @name WHERE id = @id; ", connection);
@@ -39,29 +37,18 @@ namespace TrelloClone.Services
 
 				cm.Prepare();
 				cm.ExecuteNonQuery();
-			};
+			};*/
+			_cardListRepository.Update(cardList);
 		}
 
 		internal void DeleteCardList(long id)
 		{
-			using (var connection = new NpgsqlConnection(_connectionString))
-			{
-				connection.Open();
-				var cm = new NpgsqlCommand("delete from cardlists where id = @id;", connection);
-
-				NpgsqlParameter idParam = new NpgsqlParameter("@id", NpgsqlTypes.NpgsqlDbType.Bigint);
-				idParam.Value = id;
-
-				cm.Parameters.Add(id);
-
-				cm.Prepare();
-				cm.ExecuteNonQuery();
-			}
+			_cardListRepository.Remove(id);
 		}
 
-		internal void CreateCardListForBoard(long boardId, CardList cardList)
+		internal void CreateCardListForBoard(CardList cardList)
 		{
-			using (var connection = new NpgsqlConnection(_connectionString))
+			/*using (var connection = new NpgsqlConnection(_connectionString))
 			{
 				connection.Open();
 				var cm = new NpgsqlCommand("INSERT INTO public.cardlists(name, board_id) VALUES (@name, @board_id);", connection);
@@ -77,7 +64,8 @@ namespace TrelloClone.Services
 
 				cm.Prepare();
 				cm.ExecuteNonQuery();
-			}
+			}*/
+			_cardListRepository.Add(cardList);
 		}
 
 		

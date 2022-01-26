@@ -17,9 +17,11 @@ namespace TrelloClone.Models
         private string _name;
         private IEnumerable<Card> _cards;
         private long _boardId;
-
+        [Column("id")]
         public long Id { get { return _id; } set { _id = value; } }
+        [Column("name")]
         public string Name { get { return _name; } set { _name = value; } }
+        [Column("board_id")]
         public long BoardId { get { return _boardId; } set { _boardId = value; } }
         public IEnumerable<Card> Cards { get { return _cards; } set { _cards = value; } }
 

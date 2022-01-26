@@ -21,10 +21,10 @@ namespace TrelloClone.Controllers
 			_cardService = cardService;
 		}
 
-		[HttpPost("{cardListId}")]
-		public void CreateCardForCardList(long cardListId, [FromBody] Card card)
+		[HttpPost]
+		public void CreateCardForCardList([FromBody] Card card)
 		{
-			_cardService.CreateCardForCardList(cardListId, card);
+			_cardService.CreateCardForCardList( card);
 		}
 
 		[HttpDelete("{id}")]

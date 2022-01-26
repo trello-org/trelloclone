@@ -10,8 +10,7 @@ namespace Repository.Repository
 {
 	public interface ICardListRepository : IRepository<CardList>
 	{
-		void AssignCard(CardAsigneeDto cardAsigneeDto);
-		void RemoveAssigneeFromCard(CardAsigneeDto cardAsigneeDto);
+		
 
 	}
 }

@@ -22,6 +22,12 @@ namespace TrelloClone
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
+			modelBuilder.Entity<User>().ToTable("users");
+			modelBuilder.Entity<Board>().ToTable("boards");
+			modelBuilder.Entity<CardList>().ToTable("cardlists");
+			modelBuilder.Entity<Card>().ToTable("cards");
+			modelBuilder.Entity<Label>().ToTable("labels");
+
 			modelBuilder.Entity<User>().Property(u => u.Password).IsRequired();
 			modelBuilder.Entity<Board>().Property(b => b.Name).IsRequired();
 			modelBuilder.Entity<CardList>().Property(cl => cl.Name).IsRequired();

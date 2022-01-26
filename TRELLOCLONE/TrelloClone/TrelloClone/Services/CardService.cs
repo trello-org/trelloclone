@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Npgsql;
+using Repository.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,19 +13,16 @@ namespace TrelloClone.Services
 {
 	public class CardService
 	{
-		private readonly ApplicationContext _dbContext;
-		private readonly IConfiguration _configuration;
-		private readonly string _connectionString;
+		private readonly ICardRepository _cardRepository;
 
-		public CardService(IConfiguration configuration)
+		public CardService(ICardRepository cardRepository)
 		{
-			_configuration = configuration;
-			_connectionString = _configuration["PostgreSql:ConnectionStringADO"];
+			_cardRepository = cardRepository;
 		}
 
-		internal void CreateCardForCardList(long cardListId, Card card)
+		internal void CreateCardForCardList(Card card)
 		{
-			using (var connection = new NpgsqlConnection(_connectionString))
+			/*using (var connection = new NpgsqlConnection(_connectionString))
 			{
 				connection.Open();
 				var cm = new NpgsqlCommand("INSERT INTO public.cards(name, description, card_list_id) VALUES(@name, @desc, @id); ", connection);
@@ -44,21 +42,13 @@ namespace TrelloClone.Services
 
 				cm.Prepare();
 				cm.ExecuteNonQuery();
-			}
+			}*/
+			_cardRepository.Add(card);
 		}
 
 		internal void DeleteCard(long id)
 		{
-			using (var connection = new NpgsqlConnection(_connectionString))
-			{
-				connection.Open();
-				var cm = new NpgsqlCommand("delete from cards where id = @id;", connection);
-
-				cm.Parameters.AddWithValue("@id", id);
-
-				cm.Prepare();
-				cm.ExecuteNonQuery();
-			}
+			_cardRepository.Remove(id);
 		}
 
 		internal void AddLabelToCard(CardLabelDto cardLabelDto)
@@ -73,44 +63,12 @@ namespace TrelloClone.Services
 
 		internal void AssignCard(CardAsigneeDto cardAsigneeDto)
 		{
-			using (var connection = new NpgsqlConnection(_connectionString))
-			{
-				connection.Open();
-				var cm = new NpgsqlCommand("INSERT INTO public.asignees(user_id, card_id) VALUES(@user_id, @card_id); ", connection);
-
-				NpgsqlParameter userIdParam = new NpgsqlParameter("@user_id", NpgsqlTypes.NpgsqlDbType.Bigint);
-				userIdParam.Value = cardAsigneeDto.UserId;
-
-				NpgsqlParameter cardIdParam = new NpgsqlParameter("@card_id", NpgsqlTypes.NpgsqlDbType.Bigint);
-				cardIdParam.Value = cardAsigneeDto.CardId;
-
-				cm.Parameters.Add(userIdParam);
-				cm.Parameters.Add(cardIdParam);
-
-				cm.Prepare();
-				cm.ExecuteNonQuery();
-			}
+			_cardRepository.AssignCard(cardAsigneeDto);
 		}
 
 		internal void RemoveAssigneeFromCard(CardAsigneeDto cardAsigneeDto)
 		{
-			using (var connection = new NpgsqlConnection(_connectionString))
-			{
-				connection.Open();
-				var cm = new NpgsqlCommand("delete from asignees where user_id = @user_id and card_id = @card_id;", connection);
-
-				NpgsqlParameter userIdParam = new NpgsqlParameter("@user_id", NpgsqlTypes.NpgsqlDbType.Bigint);
-				userIdParam.Value = cardAsigneeDto.UserId;
-
-				NpgsqlParameter cardIdParam = new NpgsqlParameter("@card_id", NpgsqlTypes.NpgsqlDbType.Bigint);
-				cardIdParam.Value = cardAsigneeDto.CardId;
-
-				cm.Parameters.Add(userIdParam);
-				cm.Parameters.Add(cardIdParam);
-
-				cm.Prepare();
-				cm.ExecuteNonQuery();
-			}
+			_cardRepository.RemoveAssigneeFromCard(cardAsigneeDto);
 		}
 	}
 }

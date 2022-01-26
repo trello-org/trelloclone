@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Npgsql;
+using Repository.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,20 +12,16 @@ namespace TrelloClone.Services
 {
 	public class UserService
 	{
-		private readonly ApplicationContext _dbContext;
-		private readonly IConfiguration _configuration;
-		private readonly string _connectionString;
+		private readonly IUserRepository _userRepository;
 
-		public UserService(IConfiguration configuration)
+		public UserService(IUserRepository userRepository)
 		{
-
-			_configuration = configuration;
-			_connectionString = _configuration["PostgreSql:ConnectionStringADO"];
+			_userRepository = userRepository;
 		}
 
 		internal IEnumerable<User> GetAllUsers()
 		{
-			var retList = new List<User>();
+			/*var retList = new List<User>();
 			using (var connection = new NpgsqlConnection(_connectionString))
 			{
 				var cm = new NpgsqlCommand("select * from users", connection);
@@ -44,12 +41,14 @@ namespace TrelloClone.Services
 				}
 			}
 
-			return retList;
+			return retList;*/
+
+			return _userRepository.GetAll();
 		}
 
 		internal void CreateUser(User user)
 		{
-			//if (user.Boards == null) user.Boards = new List<Board>();
+			/*//if (user.Boards == null) user.Boards = new List<Board>();
 			//_dbContext.Add(user);
 			//_dbContext.SaveChanges();	
 			using (var connection = new NpgsqlConnection(_connectionString))
@@ -67,12 +66,13 @@ namespace TrelloClone.Services
 
 				cm.Prepare();
 				cm.ExecuteNonQuery();
-			}
+			}*/
+			_userRepository.Add(user);
 		}
 
 		internal void EditUser(User user)
 		{
-			//_dbContext.Update(user);
+			/*//_dbContext.Update(user);
 			//_dbContext.SaveChanges();
 			using (var connection = new NpgsqlConnection(_connectionString))
 			{
@@ -93,29 +93,19 @@ namespace TrelloClone.Services
 				cm.Prepare();
 				cm.ExecuteNonQuery();
 			}
-
+			*/
+			_userRepository.Update(user);
 		}
 
 		internal void DeleteUser(long id)
 		{
-			using (var connection = new NpgsqlConnection(_connectionString))
-			{
-				connection.Open();
-				var cm = new NpgsqlCommand("delete from users where id = @id; ", connection);
-
-				NpgsqlParameter idParam = new NpgsqlParameter("@id", NpgsqlTypes.NpgsqlDbType.Bigint);
-				idParam.Value = id;
-				cm.Parameters.Add(idParam);
-
-				cm.Prepare();
-				cm.ExecuteNonQuery();
-			}
+			_userRepository.Remove(id);
 		}
 
 		internal User GetUserById(long id)
 		{
 			
-			using (var connection = new NpgsqlConnection(_connectionString))
+			/*using (var connection = new NpgsqlConnection(_connectionString))
 			{
 				var cm = new NpgsqlCommand("select * from users where id = @id", connection);
 				NpgsqlParameter idParam = new NpgsqlParameter("@id", NpgsqlTypes.NpgsqlDbType.Bigint, (int)id);
@@ -134,7 +124,8 @@ namespace TrelloClone.Services
 					};
 				}
 			}
-			return null;
+			return null;*/
+			return _userRepository.GetById(id);
 		}
 
 		internal IEnumerable<Board> GetAllBoardsForUser(long userId)

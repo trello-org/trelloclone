@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Npgsql;
+using Repository.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,20 +11,15 @@ namespace TrelloClone.Services
 {
 	public class LabelService
 	{
-		private readonly ApplicationContext _dbContext;
-		private readonly IConfiguration _configuration;
-		private readonly string _connectionString;
-
-
-		public LabelService(IConfiguration configuration)
+		private ICardLabelRepository _cardLabelRepository;
+		
+		public LabelService(ICardLabelRepository cardLabelRepository)
 		{
-			_configuration = configuration;
-			_connectionString = _configuration["PostgreSql:ConnectionStringADO"];
+			_cardLabelRepository = cardLabelRepository;
 		}
-
 		internal void CreateLabel(Label label)
 		{
-			using (var connection = new NpgsqlConnection(_connectionString))
+			/*using (var connection = new NpgsqlConnection(_connectionString))
 			{
 				connection.Open();
 				var cm = new NpgsqlCommand("INSERT INTO public.labels(name, color_hex, card_id) VALUES (@name, @color, @id); ", connection);
@@ -43,12 +39,13 @@ namespace TrelloClone.Services
 
 				cm.Prepare();
 				cm.ExecuteNonQuery();
-			}
+			}*/
+			_cardLabelRepository.Add(label);
 		}
 
 		internal void DeleteLabel(long id)
 		{
-			using (var connection = new NpgsqlConnection(_connectionString))
+			/*using (var connection = new NpgsqlConnection(_connectionString))
 			{
 				connection.Open();
 				var cm = new NpgsqlCommand("delete from labels where id = @id; ", connection);
@@ -61,7 +58,8 @@ namespace TrelloClone.Services
 
 				cm.Prepare();
 				cm.ExecuteNonQuery();
-			}
+			}*/
+			_cardLabelRepository.Remove(id);
 		}
 	}
 }

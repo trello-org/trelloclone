@@ -8,6 +8,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Npgsql;
+using Repository;
 using Repository.Repository;
 using System;
 using System.Collections.Generic;
@@ -46,10 +47,10 @@ namespace TrelloClone
             services.AddDbContext<ApplicationContext>(options => options.UseNpgsql(builder.ConnectionString));
           
             services.AddTransient<IUserRepository, UserRepository>();
-            services.AddTransient<IBoardRepository>();
-            services.AddTransient<ICardListRepository>();
-            services.AddTransient<ICardRepository>();
-            services.AddTransient<ICardLabelRepository>();
+            services.AddTransient<IBoardRepository, BoardRepository>();
+            services.AddTransient<ICardListRepository, CardListRepository>();
+            services.AddTransient<ICardRepository, CardRepository>();
+            services.AddTransient<ICardLabelRepository, CardLabelRepository>();
             services.AddScoped<UserService>();
             services.AddScoped<BoardService>();
             //services.AddScoped<CardListService>();

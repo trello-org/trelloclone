@@ -42,7 +42,7 @@ namespace Repository.Repository
 			return _dbContext.Users;
 		}
 
-		public User GetById(int id)
+		public User GetById(long id)
 		{
 			return _dbContext.Users.SingleOrDefault(u => u.Id == id);
 		}
@@ -77,6 +77,12 @@ namespace Repository.Repository
 		public void RemoveRange(IEnumerable<User> entities)
 		{
 			throw new NotImplementedException();
+		}
+
+		public void Update(User entity)
+		{
+			_dbContext.Users.Update(entity);
+			_dbContext.SaveChanges();
 		}
 	}
 }

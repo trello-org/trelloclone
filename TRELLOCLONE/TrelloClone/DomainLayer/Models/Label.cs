@@ -18,9 +18,13 @@ namespace TrelloClone.Models
 		private string _colorHex;
 		private long _cardId;
 
+		[Column("id")]
 		public long Id { get { return _id; } set { _id = value; } }
+		[Column("name")]
 		public string Name { get { return _name; } set { _name = value; } }
+		[Column("color_hex")]
 		public string ColorHex { get { return _colorHex; } set { _colorHex = value; } }
+		[Column("card_id")]
 		public long CardId { get { return _cardId; } set { _cardId = value; } }
 	}
 }

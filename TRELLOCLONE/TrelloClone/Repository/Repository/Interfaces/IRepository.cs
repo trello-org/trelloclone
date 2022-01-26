@@ -9,13 +9,15 @@ namespace Repository.Repository
 {
 	public interface IRepository<T> where T : class
 	{
-        T GetById(int id);
+        T GetById(long id);
         IEnumerable<T> GetAll();
         IEnumerable<T> Find(Expression<Func<T, bool>> expression);
         void Add(T entity);
         void AddRange(IEnumerable<T> entities);
         void Remove(long id);
         void RemoveRange(IEnumerable<T> entities);
+
+        void Update(T entity);
 
     }
 }
