@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TrelloClone;
@@ -9,9 +10,10 @@ using TrelloClone;
 namespace TrelloClone.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20220119132659_NoParentRefs")]
+    partial class NoParentRefs
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -42,7 +44,7 @@ namespace TrelloClone.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("boards");
+                    b.ToTable("Boards");
                 });
 
             modelBuilder.Entity("TrelloClone.Models.Card", b =>
@@ -65,7 +67,7 @@ namespace TrelloClone.Migrations
 
                     b.HasIndex("CardListId");
 
-                    b.ToTable("cards");
+                    b.ToTable("Cards");
                 });
 
             modelBuilder.Entity("TrelloClone.Models.CardList", b =>
@@ -85,7 +87,7 @@ namespace TrelloClone.Migrations
 
                     b.HasIndex("BoardId");
 
-                    b.ToTable("cardlists");
+                    b.ToTable("CardLists");
                 });
 
             modelBuilder.Entity("TrelloClone.Models.Label", b =>
@@ -108,7 +110,7 @@ namespace TrelloClone.Migrations
 
                     b.HasIndex("CardId");
 
-                    b.ToTable("labels");
+                    b.ToTable("Labels");
                 });
 
             modelBuilder.Entity("TrelloClone.Models.User", b =>
@@ -122,15 +124,14 @@ namespace TrelloClone.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Username")
-                        .HasColumnType("text")
-                        .HasColumnName("username");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
                     b.HasIndex("Username")
                         .IsUnique();
 
-                    b.ToTable("users");
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("TrelloClone.Models.Board", b =>
