@@ -4,13 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TrelloClone.Models;
-using TrelloClone.Models.Dtos;
 
-namespace Repository.Repository
+namespace Application.Services.Interfaces
 {
-	public interface ICardListRepository : IRepository<CardList>
+	public interface ICardLabelService : IService<Label>
 	{
-		
-
 	}
 }

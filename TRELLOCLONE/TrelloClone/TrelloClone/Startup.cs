@@ -1,3 +1,4 @@
+using Application.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -40,21 +41,24 @@ namespace TrelloClone
         
             var connectionString = Configuration["PostgreSql:ConnectionString"];
             var dbPassword = Configuration["PostgreSql:DbPassword"];
+           
             var builder = new NpgsqlConnectionStringBuilder(connectionString)
             {
                 Password = dbPassword
             };
             services.AddDbContext<ApplicationContext>(options => options.UseNpgsql(builder.ConnectionString));
-          
+
+            services.AddSingleton(_ => Configuration["PostgreSql:ConnectionStringAdo"]);
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IBoardRepository, BoardRepository>();
             services.AddTransient<ICardListRepository, CardListRepository>();
             services.AddTransient<ICardRepository, CardRepository>();
             services.AddTransient<ICardLabelRepository, CardLabelRepository>();
-            services.AddScoped<UserService>();
-            services.AddScoped<BoardService>();
-            //services.AddScoped<CardListService>();
-            //services.AddScoped<CardService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IBoardService, BoardService>();
+            services.AddScoped<ICardListService, CardListService>();
+            services.AddScoped<ICardService, CardService>();
+            services.AddScoped<ICardLabelService, LabelService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

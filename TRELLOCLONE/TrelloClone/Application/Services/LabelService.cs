@@ -1,15 +1,13 @@
-﻿using Microsoft.Extensions.Configuration;
-using Npgsql;
+﻿using Application.Services.Interfaces;
 using Repository.Repository;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Linq.Expressions;
 using TrelloClone.Models;
 
 namespace TrelloClone.Services
 {
-	public class LabelService
+	public class LabelService : ICardLabelService
 	{
 		private ICardLabelRepository _cardLabelRepository;
 		
@@ -17,7 +15,7 @@ namespace TrelloClone.Services
 		{
 			_cardLabelRepository = cardLabelRepository;
 		}
-		internal void CreateLabel(Label label)
+		public void Add(Label label)
 		{
 			/*using (var connection = new NpgsqlConnection(_connectionString))
 			{
@@ -43,7 +41,27 @@ namespace TrelloClone.Services
 			_cardLabelRepository.Add(label);
 		}
 
-		internal void DeleteLabel(long id)
+		public void AddRange(IEnumerable<Label> entities)
+		{
+			throw new NotImplementedException();
+		}
+
+		public IEnumerable<Label> Find(Expression<Func<Label, bool>> expression)
+		{
+			return _cardLabelRepository.Find(expression);
+		}
+
+		public IEnumerable<Label> GetAll()
+		{
+			return _cardLabelRepository.GetAll();
+		}
+
+		public Label GetById(long id)
+		{
+			return _cardLabelRepository.GetById(id);
+		}
+
+		public void Remove(long id)
 		{
 			/*using (var connection = new NpgsqlConnection(_connectionString))
 			{
@@ -60,6 +78,16 @@ namespace TrelloClone.Services
 				cm.ExecuteNonQuery();
 			}*/
 			_cardLabelRepository.Remove(id);
+		}
+
+		public void RemoveRange(IEnumerable<Label> entities)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void Update(Label entity)
+		{
+			_cardLabelRepository.Update(entity);
 		}
 	}
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Application.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -15,9 +16,9 @@ namespace TrelloClone.Controllers
 	[ApiController]
 	public class UserController : ControllerBase
 	{
-		private readonly UserService _userService;
+		private readonly IUserService _userService;
 
-		public UserController(UserService userService)
+		public UserController(IUserService userService)
 		{
 			_userService = userService;
 		}
@@ -26,41 +27,41 @@ namespace TrelloClone.Controllers
 		[HttpGet]
 		public IEnumerable<User> Get()
 		{
-			return _userService.GetAllUsers();
+			return _userService.GetAll();
 		}
 
 		// GET api/users/5
 		[HttpGet("{id}")]
 		public User GetUserById(long id)
 		{
-			return _userService.GetUserById(id);
+			return _userService.GetById(id);
 		}
 
 		[HttpGet("boards/{userId}")]
-		public IEnumerable<Board> GetAllBoardsForUser(long userId)
+		IEnumerable<Board> GetAllBoardsForUser(long userId)
 		{
-			return _userService.GetAllBoardsForUser(userId);
+			return null;
 		}
 
 		// POST api/users
 		[HttpPost]
 		public void Post([FromBody] User user)
 		{
-			_userService.CreateUser(user);
+			_userService.Add(user);
 		}
 
 		// PUT api/users
 		[HttpPut]
 		public void Put([FromBody] User user)
 		{
-			_userService.EditUser(user);
+			_userService.Update(user);
 		}
 
 		// DELETE api/users/5
 		[HttpDelete("{id}")]
 		public void Delete(long id)
 		{
-			_userService.DeleteUser(id);
+			_userService.Remove(id);
 		}
 	}
 }

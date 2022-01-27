@@ -1,16 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Npgsql;
+﻿using Application.Services.Interfaces;
 using Repository.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using TrelloClone.Models;
 
 namespace TrelloClone.Services
 {
-	public class UserService
+	public class UserService : IUserService
 	{
 		private readonly IUserRepository _userRepository;
 
@@ -19,7 +18,7 @@ namespace TrelloClone.Services
 			_userRepository = userRepository;
 		}
 
-		internal IEnumerable<User> GetAllUsers()
+		public IEnumerable<User> GetAllUsers()
 		{
 			/*var retList = new List<User>();
 			using (var connection = new NpgsqlConnection(_connectionString))
@@ -46,7 +45,7 @@ namespace TrelloClone.Services
 			return _userRepository.GetAll();
 		}
 
-		internal void CreateUser(User user)
+		public void Add(User user)
 		{
 			/*//if (user.Boards == null) user.Boards = new List<Board>();
 			//_dbContext.Add(user);
@@ -70,7 +69,7 @@ namespace TrelloClone.Services
 			_userRepository.Add(user);
 		}
 
-		internal void EditUser(User user)
+		public void Update(User user)
 		{
 			/*//_dbContext.Update(user);
 			//_dbContext.SaveChanges();
@@ -97,12 +96,12 @@ namespace TrelloClone.Services
 			_userRepository.Update(user);
 		}
 
-		internal void DeleteUser(long id)
+		public void Remove(long id)
 		{
 			_userRepository.Remove(id);
 		}
 
-		internal User GetUserById(long id)
+		public User GetById(long id)
 		{
 			
 			/*using (var connection = new NpgsqlConnection(_connectionString))
@@ -128,7 +127,27 @@ namespace TrelloClone.Services
 			return _userRepository.GetById(id);
 		}
 
-		internal IEnumerable<Board> GetAllBoardsForUser(long userId)
+		public IEnumerable<Board> GetAllBoardsForUser(long userId)
+		{
+			throw new NotImplementedException();
+		}
+
+		public IEnumerable<User> GetAll()
+		{
+			return _userRepository.GetAll();
+		}
+
+		public IEnumerable<User> Find(Expression<Func<User, bool>> expression)
+		{
+			return _userRepository.Find(expression);
+		}
+
+		public void AddRange(IEnumerable<User> entities)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void RemoveRange(IEnumerable<User> entities)
 		{
 			throw new NotImplementedException();
 		}

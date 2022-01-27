@@ -1,16 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Npgsql;
+﻿using Application.Services.Interfaces;
 using Repository.Repository;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Linq.Expressions;
 using TrelloClone.Models;
 
 namespace TrelloClone.Services
 {
-	public class BoardService
+	public class BoardService : IBoardService
 	{
 		private readonly IBoardRepository _boardRepository;
 
@@ -19,7 +16,7 @@ namespace TrelloClone.Services
 			_boardRepository = boardRepository;
 		}
 
-		internal IEnumerable<Board> GetAllBoardsForUser(long id)
+		public IEnumerable<Board> GetAllBoardsForUser(long id)
 		{
 			/*var retList = new List<Board>();
 			using (var connection = new NpgsqlConnection(_connectionString))
@@ -50,7 +47,7 @@ namespace TrelloClone.Services
 			return _boardRepository.GetAllBoardsForUser(id);
 		}
 
-		internal Board GetBoardById(long id)
+		public Board GetById(long id)
 		{
 			/*using (var connection = new NpgsqlConnection(_connectionString))
 			{
@@ -79,7 +76,7 @@ namespace TrelloClone.Services
 			return _boardRepository.GetById(id);
 		}
 
-		internal void CreateBoard(long userId, Board board)
+		public void Add(Board board)
 		{
 			/*using (var connection = new NpgsqlConnection(_connectionString))
 			{
@@ -109,7 +106,7 @@ namespace TrelloClone.Services
 			_boardRepository.Add(board);
 		}
 
-		internal void EditBoard(Board board)
+		public void Update(Board board)
 		{
 			/*using (var connection = new NpgsqlConnection(_connectionString))
 			{
@@ -139,12 +136,12 @@ namespace TrelloClone.Services
 			_boardRepository.Update(board);
 		}
 
-		internal void DeleteBoard(long id)
+		public void Remove(long id)
 		{
 			_boardRepository.Remove(id);
 		}
 
-		internal void EditBoardVisibility(Board board)
+		public void EditBoardVisibility(Board board)
 		{
 			/*using (var connection = new NpgsqlConnection(_connectionString))
 			{
@@ -164,6 +161,26 @@ namespace TrelloClone.Services
 				cm.ExecuteNonQuery();
 			}*/
 			_boardRepository.EditBoardVisibility(board);
+		}
+
+		public IEnumerable<Board> GetAll()
+		{
+			throw new NotImplementedException();
+		}
+
+		public IEnumerable<Board> Find(Expression<Func<Board, bool>> expression)
+		{
+			return _boardRepository.Find(expression);
+		}
+
+		public void AddRange(IEnumerable<Board> entities)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void RemoveRange(IEnumerable<Board> entities)
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

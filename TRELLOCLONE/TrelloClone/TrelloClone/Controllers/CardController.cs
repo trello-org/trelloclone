@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Application.Services.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -14,9 +15,9 @@ namespace TrelloClone.Controllers
 	[ApiController]
 	public class CardController : ControllerBase
 	{
-		private readonly CardService _cardService;
+		private readonly ICardService _cardService;
 
-		public CardController(CardService cardService)
+		public CardController(ICardService cardService)
 		{
 			_cardService = cardService;
 		}
@@ -24,25 +25,20 @@ namespace TrelloClone.Controllers
 		[HttpPost]
 		public void CreateCardForCardList([FromBody] Card card)
 		{
-			_cardService.CreateCardForCardList( card);
+			_cardService.Add(card);
 		}
 
 		[HttpDelete("{id}")]
 		public void DeleteCard(long id)
 		{
-			_cardService.DeleteCard(id);
+			_cardService.Remove(id);
 		}
 
 		[HttpDelete("nocascade/{id}")]
-		public void DeleteCardNoCascade(Guid id)
+		void DeleteCardNoCascade(Guid id)
 		{
-			_cardService.DeleteCardNoCascade(id);
+			throw new NotImplementedException();
 		}
 
-		[HttpPost("label")]
-		public void AddLabelToCard(CardLabelDto cardLabelDto)
-		{
-			_cardService.AddLabelToCard(cardLabelDto);
-		}
 	}
 }

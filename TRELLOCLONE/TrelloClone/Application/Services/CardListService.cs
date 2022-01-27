@@ -1,16 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Npgsql;
+﻿
+using Application.Services.Interfaces;
 using Repository.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using TrelloClone.Models;
 
 namespace TrelloClone.Services
 {
-	public class CardListService
+	public class CardListService : ICardListService
 	{
 		private readonly ICardListRepository _cardListRepository;
 
@@ -19,7 +19,7 @@ namespace TrelloClone.Services
 			_cardListRepository = cardListRepository;
 		}
 
-		internal void UpdateCardList(CardList cardList)
+		public void Update(CardList cardList)
 		{
 			/*using (var connection = new NpgsqlConnection(_connectionString))
 			{
@@ -41,12 +41,12 @@ namespace TrelloClone.Services
 			_cardListRepository.Update(cardList);
 		}
 
-		internal void DeleteCardList(long id)
+		public void Remove(long id)
 		{
 			_cardListRepository.Remove(id);
 		}
 
-		internal void CreateCardListForBoard(CardList cardList)
+		public void Add(CardList cardList)
 		{
 			/*using (var connection = new NpgsqlConnection(_connectionString))
 			{
@@ -68,6 +68,29 @@ namespace TrelloClone.Services
 			_cardListRepository.Add(cardList);
 		}
 
-		
+		public CardList GetById(long id)
+		{
+			return _cardListRepository.GetById(id);
+		}
+
+		public IEnumerable<CardList> GetAll()
+		{
+			return _cardListRepository.GetAll();
+		}
+
+		public IEnumerable<CardList> Find(Expression<Func<CardList, bool>> expression)
+		{
+			return _cardListRepository.Find(expression);
+		}
+
+		public void AddRange(IEnumerable<CardList> entities)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void RemoveRange(IEnumerable<CardList> entities)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }

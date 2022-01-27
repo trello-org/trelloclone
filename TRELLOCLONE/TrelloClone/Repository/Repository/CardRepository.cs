@@ -34,7 +34,7 @@ namespace Repository.Repository
 			_dbContext.SaveChanges();
 		}
 
-		public void AssignCard(CardAsigneeDto cardAsigneeDto)
+		public void AssignCard(long cardId, long userId)
 		{
 			using (var connection = new NpgsqlConnection(_connectionString))
 			{
@@ -42,10 +42,10 @@ namespace Repository.Repository
 				var cm = new NpgsqlCommand("INSERT INTO public.asignees(user_id, card_id) VALUES(@user_id, @card_id); ", connection);
 
 				NpgsqlParameter userIdParam = new NpgsqlParameter("@user_id", NpgsqlTypes.NpgsqlDbType.Bigint);
-				userIdParam.Value = cardAsigneeDto.UserId;
+				userIdParam.Value = userId;
 
 				NpgsqlParameter cardIdParam = new NpgsqlParameter("@card_id", NpgsqlTypes.NpgsqlDbType.Bigint);
-				cardIdParam.Value = cardAsigneeDto.CardId;
+				cardIdParam.Value = cardId;
 
 				cm.Parameters.Add(userIdParam);
 				cm.Parameters.Add(cardIdParam);
@@ -82,7 +82,7 @@ namespace Repository.Repository
 			_dbContext.SaveChanges();
 		}
 
-		public void RemoveAssigneeFromCard(CardAsigneeDto cardAsigneeDto)
+		public void RemoveAssigneeFromCard(long cardId, long userId)
 		{
 			using (var connection = new NpgsqlConnection(_connectionString))
 			{
@@ -90,10 +90,10 @@ namespace Repository.Repository
 				var cm = new NpgsqlCommand("delete from asignees where user_id = @user_id and card_id = @card_id;", connection);
 
 				NpgsqlParameter userIdParam = new NpgsqlParameter("@user_id", NpgsqlTypes.NpgsqlDbType.Bigint);
-				userIdParam.Value = cardAsigneeDto.UserId;
+				userIdParam.Value = userId;
 
 				NpgsqlParameter cardIdParam = new NpgsqlParameter("@card_id", NpgsqlTypes.NpgsqlDbType.Bigint);
-				cardIdParam.Value = cardAsigneeDto.CardId;
+				cardIdParam.Value = cardId;
 
 				cm.Parameters.Add(userIdParam);
 				cm.Parameters.Add(cardIdParam);

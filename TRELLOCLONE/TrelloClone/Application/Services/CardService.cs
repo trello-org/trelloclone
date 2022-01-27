@@ -1,17 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Npgsql;
+﻿using Application.Services.Interfaces;
 using Repository.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using TrelloClone.Models;
-using TrelloClone.Models.Dtos;
+
 
 namespace TrelloClone.Services
 {
-	public class CardService
+	public class CardService : ICardService
 	{
 		private readonly ICardRepository _cardRepository;
 
@@ -20,7 +19,7 @@ namespace TrelloClone.Services
 			_cardRepository = cardRepository;
 		}
 
-		internal void CreateCardForCardList(Card card)
+		public void Add(Card card)
 		{
 			/*using (var connection = new NpgsqlConnection(_connectionString))
 			{
@@ -46,29 +45,48 @@ namespace TrelloClone.Services
 			_cardRepository.Add(card);
 		}
 
-		internal void DeleteCard(long id)
+		public void Remove(long id)
 		{
 			_cardRepository.Remove(id);
 		}
+		public void AssignCard(long cardId, long userId)
+		{
+			_cardRepository.AssignCard(cardId, userId);
+		}
 
-		internal void AddLabelToCard(CardLabelDto cardLabelDto)
+		public void RemoveAssigneeFromCard(long cardId, long userId)
+		{
+			_cardRepository.RemoveAssigneeFromCard(cardId, userId);
+		}
+
+		public Card GetById(long id)
+		{
+			return _cardRepository.GetById(id);
+		}
+
+		public IEnumerable<Card> GetAll()
+		{
+			return _cardRepository.GetAll();
+		}
+
+		public IEnumerable<Card> Find(Expression<Func<Card, bool>> expression)
+		{
+			return _cardRepository.Find(expression);
+		}
+
+		public void AddRange(IEnumerable<Card> entities)
 		{
 			throw new NotImplementedException();
 		}
 
-		internal void DeleteCardNoCascade(Guid id)
+		public void RemoveRange(IEnumerable<Card> entities)
 		{
 			throw new NotImplementedException();
 		}
 
-		internal void AssignCard(CardAsigneeDto cardAsigneeDto)
+		public void Update(Card entity)
 		{
-			_cardRepository.AssignCard(cardAsigneeDto);
-		}
-
-		internal void RemoveAssigneeFromCard(CardAsigneeDto cardAsigneeDto)
-		{
-			_cardRepository.RemoveAssigneeFromCard(cardAsigneeDto);
+			_cardRepository.Update(entity);
 		}
 	}
 }

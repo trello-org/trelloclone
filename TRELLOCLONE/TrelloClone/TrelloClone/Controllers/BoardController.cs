@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Application.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,9 +16,9 @@ namespace TrelloClone.Controllers
 	public class BoardController : ControllerBase
 	{
 
-		private readonly BoardService _boardService;
+		private readonly IBoardService _boardService;
 
-		public BoardController(BoardService boardService)
+		public BoardController(IBoardService boardService)
 		{
 			_boardService = boardService;
 		}
@@ -33,7 +34,7 @@ namespace TrelloClone.Controllers
 		[HttpGet("{id}")]
 		public Board Get(long id)
 		{
-			return _boardService.GetBoardById(id);
+			return _boardService.GetById(id);
 		}
 
 		
@@ -42,21 +43,21 @@ namespace TrelloClone.Controllers
 		[HttpPost("{userId}")]
 		public void Post(long userId, [FromBody] Board board)
 		{
-			_boardService.CreateBoard(userId, board);
+			_boardService.Add(board);
 		}
 
 		// PUT api/boards
 		[HttpPut]
 		public void Put([FromBody] Board board)
 		{
-			_boardService.EditBoard(board);
+			_boardService.Update(board);
 		}
 
 		// DELETE api/<BoardController>/5
 		[HttpDelete("{id}")]
 		public void Delete(long id) 
 		{
-			_boardService.DeleteBoard(id);
+			_boardService.Remove(id);
 		}
 	}
 }

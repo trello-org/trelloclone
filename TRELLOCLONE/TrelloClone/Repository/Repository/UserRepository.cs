@@ -15,10 +15,10 @@ namespace Repository.Repository
 		private readonly ApplicationContext _dbContext;
 		private readonly string _connectionString;
 
-		public UserRepository(ApplicationContext dbContext)
+		public UserRepository(ApplicationContext dbContext, string connectionString)
 		{
 			_dbContext = dbContext;
-			_connectionString = Environment.GetEnvironmentVariable("adoString");
+			_connectionString = connectionString;
 		}
 		public void Add(User entity)
 		{
