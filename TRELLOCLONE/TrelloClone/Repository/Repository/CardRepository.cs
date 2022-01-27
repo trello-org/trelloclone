@@ -28,10 +28,22 @@ namespace Repository.Repository
 			_dbContext.SaveChanges();
 		}
 
+		public async Task AddAsync(Card entity)
+		{
+			await _dbContext.Cards.AddAsync(entity);
+			await _dbContext.SaveChangesAsync();
+		}
+
 		public void AddRange(IEnumerable<Card> entities)
 		{
 			_dbContext.Cards.AddRange(entities);
 			_dbContext.SaveChanges();
+		}
+
+		public async Task AddRangeAsync(IEnumerable<Card> entities)
+		{
+			await _dbContext.Cards.AddRangeAsync(entities);
+			await _dbContext.SaveChangesAsync();
 		}
 
 		public void AssignCard(long cardId, long userId)
@@ -55,9 +67,19 @@ namespace Repository.Repository
 			}
 		}
 
+		public Task AssignCardAsync(long cardId, long userId)
+		{
+			throw new NotImplementedException();
+		}
+
 		public IEnumerable<Card> Find(Expression<Func<Card, bool>> expression)
 		{
 			return _dbContext.Cards.Where(expression);
+		}
+
+		public async Task<IEnumerable<Card>> FindAsync(Expression<Func<Card, bool>> expression)
+		{
+			return await _dbContext.Cards.Where(expression).ToListAsync();
 		}
 
 		public IEnumerable<Card> GetAll()
@@ -65,9 +87,19 @@ namespace Repository.Repository
 			return _dbContext.Cards;
 		}
 
+		public async Task<IEnumerable<Card>> GetAllAsync()
+		{
+			return await _dbContext.Cards.ToListAsync();
+		}
+
 		public Card GetById(long id)
 		{
 			return _dbContext.Cards.SingleOrDefault(c => c.Id == id);
+		}
+
+		public async Task<Card> GetByIdAsync(long id)
+		{
+			return await _dbContext.Cards.SingleOrDefaultAsync(c => c.Id == id);
 		}
 
 		public void Remove(long id)
@@ -103,7 +135,29 @@ namespace Repository.Repository
 			}
 		}
 
+		public Task RemoveAssigneeFromCardAsync(long cardId, long userId)
+		{
+			throw new NotImplementedException();
+		}
+
+		public async  Task RemoveAsync(long id)
+		{
+			Card toBeRemoved = await _dbContext.Cards
+				.Where(u => u.Id == id)
+				.Include(l => l.Labels)
+				.FirstOrDefaultAsync ();
+
+			_dbContext.Labels.RemoveRange(toBeRemoved.Labels);
+			_dbContext.Cards.Remove(toBeRemoved);
+			await _dbContext.SaveChangesAsync();
+		}
+
 		public void RemoveRange(IEnumerable<Card> entities)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task RemoveRangeAsync(IEnumerable<Card> entities)
 		{
 			throw new NotImplementedException();
 		}
@@ -112,6 +166,12 @@ namespace Repository.Repository
 		{
 			_dbContext.Cards.Update(entity);
 			_dbContext.SaveChanges();
+		}
+
+		public async Task UpdateAsync(Card entity)
+		{
+			_dbContext.Cards.Update(entity);
+			await _dbContext.SaveChangesAsync();
 		}
 	}
 }

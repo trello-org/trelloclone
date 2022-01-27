@@ -3,6 +3,7 @@ using Repository.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using TrelloClone.Models;
 
 namespace TrelloClone.Services
@@ -41,9 +42,19 @@ namespace TrelloClone.Services
 			_cardLabelRepository.Add(label);
 		}
 
+		public async Task AddAsync(Label entity)
+		{
+			await _cardLabelRepository.AddAsync(entity);
+		}
+
 		public void AddRange(IEnumerable<Label> entities)
 		{
 			throw new NotImplementedException();
+		}
+
+		public async Task AddRangeAsync(IEnumerable<Label> entities)
+		{
+			await _cardLabelRepository.AddRangeAsync(entities);
 		}
 
 		public IEnumerable<Label> Find(Expression<Func<Label, bool>> expression)
@@ -51,14 +62,29 @@ namespace TrelloClone.Services
 			return _cardLabelRepository.Find(expression);
 		}
 
+		public async Task<IEnumerable<Label>> FindAsync(Expression<Func<Label, bool>> expression)
+		{
+			return await _cardLabelRepository.FindAsync(expression);
+		}
+
 		public IEnumerable<Label> GetAll()
 		{
 			return _cardLabelRepository.GetAll();
 		}
 
+		public async Task<IEnumerable<Label>> GetAllAsync()
+		{
+			return await _cardLabelRepository.GetAllAsync();
+		}
+
 		public Label GetById(long id)
 		{
 			return _cardLabelRepository.GetById(id);
+		}
+
+		public async Task<Label> GetByIdAsync(long id)
+		{
+			return await _cardLabelRepository.GetByIdAsync(id);
 		}
 
 		public void Remove(long id)
@@ -80,14 +106,29 @@ namespace TrelloClone.Services
 			_cardLabelRepository.Remove(id);
 		}
 
+		public async Task RemoveAsync(long id)
+		{
+			await _cardLabelRepository.RemoveAsync(id);
+		}
+
 		public void RemoveRange(IEnumerable<Label> entities)
 		{
 			throw new NotImplementedException();
 		}
 
-		public void Update(Label entity)
+		public Task RemoveRangeAsync(IEnumerable<Label> entities)
+		{
+			throw new NotImplementedException();
+		}
+
+		public  void Update(Label entity)
 		{
 			_cardLabelRepository.Update(entity);
+		}
+
+		public async Task UpdateAsync(Label entity)
+		{
+			await _cardLabelRepository.UpdateAsync(entity);
 		}
 	}
 }

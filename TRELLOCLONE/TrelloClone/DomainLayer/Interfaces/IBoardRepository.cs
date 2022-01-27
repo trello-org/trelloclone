@@ -12,5 +12,7 @@ namespace Repository.Repository
 		IEnumerable<Board> GetAllBoardsForUser(long id);
 		void EditBoardVisibility(Board board);
 
+		Task<IEnumerable<Board>> GetAllBoardsForUserAsync(long id);
+		Task EditBoardVisibilityAsync(Board board);
 	}
 }

@@ -151,5 +151,45 @@ namespace TrelloClone.Services
 		{
 			throw new NotImplementedException();
 		}
+
+		public async Task<User> GetByIdAsync(long id)
+		{
+			return await _userRepository.GetByIdAsync(id);
+		}
+
+		public async Task<IEnumerable<User>> GetAllAsync()
+		{
+			return await _userRepository.GetAllAsync();
+		}
+
+		public async Task<IEnumerable<User>> FindAsync(Expression<Func<User, bool>> expression)
+		{
+			return await _userRepository.FindAsync(expression);
+		}
+
+		public async Task AddAsync(User entity)
+		{
+			await _userRepository.AddAsync(entity);
+		}
+
+		public async Task AddRangeAsync(IEnumerable<User> entities)
+		{
+			await _userRepository.AddRangeAsync(entities);
+		}
+
+		public async Task RemoveAsync(long id)
+		{
+			await _userRepository.RemoveAsync(id);
+		}
+
+		public Task RemoveRangeAsync(IEnumerable<User> entities)
+		{
+			throw new NotImplementedException();
+		}
+
+		public async Task UpdateAsync(User entity)
+		{
+			await _userRepository.UpdateAsync(entity);
+		}
 	}
 }

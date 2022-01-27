@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -25,10 +26,22 @@ namespace Repository.Repository
 			_dbContext.SaveChanges();
 		}
 
+		public async Task AddAsync(Label entity)
+		{
+			await _dbContext.Labels.AddAsync(entity);
+			await _dbContext.SaveChangesAsync();
+		}
+
 		public void AddRange(IEnumerable<Label> entities)
 		{
 			_dbContext.Labels.AddRange(entities);
 			_dbContext.SaveChanges();
+		}
+
+		public async Task AddRangeAsync(IEnumerable<Label> entities)
+		{
+			await _dbContext.Labels.AddRangeAsync(entities);
+			await _dbContext.SaveChangesAsync();
 		}
 
 		public IEnumerable<Label> Find(Expression<Func<Label, bool>> expression)
@@ -36,14 +49,29 @@ namespace Repository.Repository
 			return _dbContext.Labels.Where(expression);
 		}
 
+		public async Task<IEnumerable<Label>> FindAsync(Expression<Func<Label, bool>> expression)
+		{
+			return await _dbContext.Labels.Where(expression).ToListAsync();
+		}
+
 		public IEnumerable<Label> GetAll()
 		{
 			return _dbContext.Labels;
 		}
 
+		public async Task<IEnumerable<Label>> GetAllAsync()
+		{
+			return await _dbContext.Labels.ToListAsync();
+		}
+
 		public Label GetById(long id)
 		{
 			return _dbContext.Labels.Single(l => l.Id == id);
+		}
+
+		public async Task<Label> GetByIdAsync(long id)
+		{
+			return await _dbContext.Labels.SingleOrDefaultAsync(l => l.Id == id);
 		}
 
 		public void Remove(Label entity)
@@ -58,7 +86,18 @@ namespace Repository.Repository
 			_dbContext.SaveChanges();
 		}
 
+		public async Task RemoveAsync(long id)
+		{
+			_dbContext.Labels.Remove(await _dbContext.Labels.SingleOrDefaultAsync(l => l.Id == id));
+			await _dbContext.SaveChangesAsync();
+		}
+
 		public void RemoveRange(IEnumerable<Label> entities)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task RemoveRangeAsync(IEnumerable<Label> entities)
 		{
 			throw new NotImplementedException();
 		}
@@ -67,6 +106,12 @@ namespace Repository.Repository
 		{
 			_dbContext.Labels.Update(entity);
 			_dbContext.SaveChanges();
+		}
+
+		public async Task UpdateAsync(Label entity)
+		{
+			_dbContext.Labels.Update(entity);
+			await _dbContext.SaveChangesAsync();
 		}
 	}
 }

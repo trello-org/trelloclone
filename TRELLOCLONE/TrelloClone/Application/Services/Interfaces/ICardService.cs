@@ -12,5 +12,8 @@ namespace Application.Services.Interfaces
 	{
 		void AssignCard(long cardId, long userId);
 		void RemoveAssigneeFromCard(long cardId, long userId);
+
+		Task AssignCardAsync(long cardId, long userId);
+		Task RemoveAssigneeFromCardAsync(long cardId, long userId);
 	}
 }

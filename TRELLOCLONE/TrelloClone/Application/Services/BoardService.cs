@@ -3,6 +3,7 @@ using Repository.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using TrelloClone.Models;
 
 namespace TrelloClone.Services
@@ -181,6 +182,56 @@ namespace TrelloClone.Services
 		public void RemoveRange(IEnumerable<Board> entities)
 		{
 			throw new NotImplementedException();
+		}
+
+		public async Task<IEnumerable<Board>> GetAllBoardsForUserAsync(long id)
+		{
+			return await _boardRepository.GetAllBoardsForUserAsync(id);
+		}
+
+		public async Task EditBoardVisibilityAsync(Board board)
+		{
+			await _boardRepository.EditBoardVisibilityAsync(board);
+		}
+
+		public async Task<Board> GetByIdAsync(long id)
+		{
+			return await _boardRepository.GetByIdAsync(id);
+		}
+
+		public async Task<IEnumerable<Board>> GetAllAsync()
+		{
+			return await _boardRepository.GetAllAsync();
+		}
+
+		public async Task<IEnumerable<Board>> FindAsync(Expression<Func<Board, bool>> expression)
+		{
+			return await _boardRepository.FindAsync(expression);
+		}
+
+		public async Task AddAsync(Board entity)
+		{
+			await _boardRepository.AddAsync(entity);
+		}
+
+		public Task AddRangeAsync(IEnumerable<Board> entities)
+		{
+			throw new NotImplementedException();
+		}
+
+		public async Task RemoveAsync(long id)
+		{
+			await _boardRepository.RemoveAsync(id);
+		}
+
+		public Task RemoveRangeAsync(IEnumerable<Board> entities)
+		{
+			throw new NotImplementedException();
+		}
+
+		public async Task UpdateAsync(Board entity)
+		{
+			await _boardRepository.UpdateAsync(entity);
 		}
 	}
 }

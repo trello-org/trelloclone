@@ -28,17 +28,32 @@ namespace Repository
 			_dbContext.SaveChanges();
 		}
 
+		public async Task AddAsync(CardList entity)
+		{
+			await _dbContext.CardLists.AddAsync(entity);
+			await _dbContext.SaveChangesAsync();
+		}
+
 		public void AddRange(IEnumerable<CardList> entities)
 		{
 			_dbContext.CardLists.AddRange(entities);
 			_dbContext.SaveChanges();
 		}
 
-		
+		public async Task AddRangeAsync(IEnumerable<CardList> entities)
+		{
+			await _dbContext.CardLists.AddRangeAsync(entities);
+			await _dbContext.SaveChangesAsync();
+		}
 
 		public IEnumerable<CardList> Find(Expression<Func<CardList, bool>> expression)
 		{
 			return _dbContext.CardLists.Where(expression);
+		}
+
+		public async Task<IEnumerable<CardList>> FindAsync(Expression<Func<CardList, bool>> expression)
+		{
+			return await _dbContext.CardLists.Where(expression).ToListAsync();
 		}
 
 		public IEnumerable<CardList> GetAll()
@@ -46,9 +61,19 @@ namespace Repository
 			return _dbContext.CardLists;
 		}
 
+		public async Task<IEnumerable<CardList>> GetAllAsync()
+		{
+			return await _dbContext.CardLists.ToListAsync();
+		}
+
 		public CardList GetById(long id)
 		{
 			return _dbContext.CardLists.SingleOrDefault(cl => cl.Id == id);
+		}
+
+		public async Task<CardList> GetByIdAsync(long id)
+		{
+			return await _dbContext.CardLists.SingleOrDefaultAsync(cl => cl.Id == id);
 		}
 
 		public void Remove(long id)
@@ -69,9 +94,30 @@ namespace Repository
 			_dbContext.SaveChanges();
 		}
 
-		
+		public async Task RemoveAsync(long id)
+		{
+			CardList toBeRemoved = await _dbContext.CardLists
+				.Where(u => u.Id == id)
+				.Include(c => c.Cards)
+				.ThenInclude(l => l.Labels)
+				.FirstOrDefaultAsync();
+
+			foreach (Card c in toBeRemoved.Cards)
+			{
+				_dbContext.Labels.RemoveRange(c.Labels);
+			}
+
+			_dbContext.Cards.RemoveRange(toBeRemoved.Cards);
+			_dbContext.CardLists.Remove(toBeRemoved);
+			await _dbContext.SaveChangesAsync();
+		}
 
 		public void RemoveRange(IEnumerable<CardList> entities)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task RemoveRangeAsync(IEnumerable<CardList> entities)
 		{
 			throw new NotImplementedException();
 		}
@@ -80,6 +126,12 @@ namespace Repository
 		{
 			_dbContext.CardLists.Update(entity);
 			_dbContext.SaveChanges();
+		}
+
+		public async Task UpdateAsync(CardList entity)
+		{
+			_dbContext.CardLists.Update(entity);
+			await _dbContext.SaveChangesAsync();
 		}
 	}
 }

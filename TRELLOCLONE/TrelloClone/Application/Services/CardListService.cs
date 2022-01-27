@@ -92,5 +92,45 @@ namespace TrelloClone.Services
 		{
 			throw new NotImplementedException();
 		}
+
+		public async Task<CardList> GetByIdAsync(long id)
+		{
+			return await _cardListRepository.GetByIdAsync(id);
+		}
+
+		public async Task<IEnumerable<CardList>> GetAllAsync()
+		{
+			return await _cardListRepository.GetAllAsync();
+		}
+
+		public async Task<IEnumerable<CardList>> FindAsync(Expression<Func<CardList, bool>> expression)
+		{
+			return await _cardListRepository.FindAsync(expression);
+		}
+
+		public async Task AddAsync(CardList entity)
+		{
+			await _cardListRepository.AddAsync(entity);
+		}
+
+		public async Task AddRangeAsync(IEnumerable<CardList> entities)
+		{
+			await _cardListRepository.AddRangeAsync(entities);
+		}
+
+		public async Task RemoveAsync(long id)
+		{
+			await _cardListRepository.RemoveAsync(id);
+		}
+
+		public Task RemoveRangeAsync(IEnumerable<CardList> entities)
+		{
+			throw new NotImplementedException();
+		}
+
+		public async Task UpdateAsync(CardList entity)
+		{
+			await _cardListRepository.UpdateAsync(entity);
+		}
 	}
 }
