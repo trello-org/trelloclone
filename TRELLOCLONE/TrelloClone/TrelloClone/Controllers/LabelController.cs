@@ -22,15 +22,15 @@ namespace TrelloClone.Controllers
 		}
 
 		[HttpPost]
-		public void CreateLabel([FromBody] Label label)
+		public async Task CreateLabelAsync([FromBody] Label label)
 		{
-			_labelService.Add(label);
+			await _labelService.AddAsync(label);
 		}
 		
 		[HttpDelete("{id}")]
-		public void DeleteLabel(long id)
+		public async Task DeleteLabelAsync(long id)
 		{
-			_labelService.Remove(id);
+			await _labelService.RemoveAsync(id);
 		}
 	}
 }

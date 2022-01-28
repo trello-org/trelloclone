@@ -22,27 +22,10 @@ namespace Repository.Repository
 			_dbContext = dbContext;
 			_connectionString = Environment.GetEnvironmentVariable("adoString");
 		}
-		public void Add(Card entity)
-		{
-			_dbContext.Cards.Add(entity);
-			_dbContext.SaveChanges();
-		}
 
 		public async Task AddAsync(Card entity)
 		{
 			await _dbContext.Cards.AddAsync(entity);
-			await _dbContext.SaveChangesAsync();
-		}
-
-		public void AddRange(IEnumerable<Card> entities)
-		{
-			_dbContext.Cards.AddRange(entities);
-			_dbContext.SaveChanges();
-		}
-
-		public async Task AddRangeAsync(IEnumerable<Card> entities)
-		{
-			await _dbContext.Cards.AddRangeAsync(entities);
 			await _dbContext.SaveChangesAsync();
 		}
 
@@ -72,34 +55,19 @@ namespace Repository.Repository
 			throw new NotImplementedException();
 		}
 
-		public IEnumerable<Card> Find(Expression<Func<Card, bool>> expression)
+		public Task<List<Card>> FindAsync(Expression<Func<Card, bool>> expression)
 		{
-			return _dbContext.Cards.Where(expression);
+			return _dbContext.Cards.Where(expression).ToListAsync();
 		}
 
-		public async Task<IEnumerable<Card>> FindAsync(Expression<Func<Card, bool>> expression)
+		public Task<List<Card>> GetAllAsync()
 		{
-			return await _dbContext.Cards.Where(expression).ToListAsync();
+			return _dbContext.Cards.ToListAsync();
 		}
 
-		public IEnumerable<Card> GetAll()
+		public Task<Card> GetByIdAsync(long id)
 		{
-			return _dbContext.Cards;
-		}
-
-		public async Task<IEnumerable<Card>> GetAllAsync()
-		{
-			return await _dbContext.Cards.ToListAsync();
-		}
-
-		public Card GetById(long id)
-		{
-			return _dbContext.Cards.SingleOrDefault(c => c.Id == id);
-		}
-
-		public async Task<Card> GetByIdAsync(long id)
-		{
-			return await _dbContext.Cards.SingleOrDefaultAsync(c => c.Id == id);
+			return _dbContext.Cards.SingleOrDefaultAsync(c => c.Id == id);
 		}
 
 		public void Remove(long id)
@@ -140,7 +108,7 @@ namespace Repository.Repository
 			throw new NotImplementedException();
 		}
 
-		public async  Task RemoveAsync(long id)
+		public async Task RemoveAsync(long id)
 		{
 			Card toBeRemoved = await _dbContext.Cards
 				.Where(u => u.Id == id)
@@ -152,26 +120,15 @@ namespace Repository.Repository
 			await _dbContext.SaveChangesAsync();
 		}
 
-		public void RemoveRange(IEnumerable<Card> entities)
-		{
-			throw new NotImplementedException();
-		}
-
 		public Task RemoveRangeAsync(IEnumerable<Card> entities)
 		{
 			throw new NotImplementedException();
 		}
 
-		public void Update(Card entity)
+		public Task UpdateAsync(Card entity)
 		{
 			_dbContext.Cards.Update(entity);
-			_dbContext.SaveChanges();
-		}
-
-		public async Task UpdateAsync(Card entity)
-		{
-			_dbContext.Cards.Update(entity);
-			await _dbContext.SaveChangesAsync();
+			return _dbContext.SaveChangesAsync();
 		}
 	}
 }

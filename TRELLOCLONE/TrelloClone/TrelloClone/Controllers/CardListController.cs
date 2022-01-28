@@ -15,28 +15,28 @@ namespace TrelloClone.Controllers
 	[ApiController]
 	public class CardListController : ControllerBase
 	{
-		private readonly ICardListService _cardListService;
+		private readonly CardListService _cardListService;
 
-		public CardListController(ICardListService cardListService)
+		public CardListController(CardListService cardListService)
 		{
 			_cardListService = cardListService;
 		}
 
 		[HttpPut]
-		public void Put([FromBody] CardList cardList)
+		public async Task PutAsync([FromBody] CardList cardList)
 		{
-			_cardListService.Update(cardList);
+			await _cardListService.UpdateAsync(cardList);
 		}
 		[HttpDelete("id")]
-		public void Delete(long id)
+		public async Task DeleteAsync(long id)
 		{
-			_cardListService.Remove(id);
+			await _cardListService.RemoveAsync(id);
 		}
 
 		[HttpPost]
-		public void CreateCardListForBoard([FromBody] CardList cardList)
+		public async Task CreateCardListForBoardAsync([FromBody] CardList cardList)
 		{
-			_cardListService.Add(cardList);
+			await _cardListService.AddAsync(cardList);
 		}
 
 		

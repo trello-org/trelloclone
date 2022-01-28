@@ -8,7 +8,7 @@ using TrelloClone.Models;
 
 namespace TrelloClone.Services
 {
-	public class LabelService : ICardLabelService
+	public class LabelService
 	{
 		private ICardLabelRepository _cardLabelRepository;
 		
@@ -16,99 +16,31 @@ namespace TrelloClone.Services
 		{
 			_cardLabelRepository = cardLabelRepository;
 		}
-		public void Add(Label label)
+
+		public Task AddAsync(Label entity)
 		{
-			/*using (var connection = new NpgsqlConnection(_connectionString))
-			{
-				connection.Open();
-				var cm = new NpgsqlCommand("INSERT INTO public.labels(name, color_hex, card_id) VALUES (@name, @color, @id); ", connection);
-
-				NpgsqlParameter nameParam = new NpgsqlParameter("@name", NpgsqlTypes.NpgsqlDbType.Varchar, label.Name.Length);
-				nameParam.Value = label.Name;
-
-				NpgsqlParameter colorParam = new NpgsqlParameter("@desc", NpgsqlTypes.NpgsqlDbType.Varchar, label.ColorHex.Length);
-				colorParam.Value = label.ColorHex;
-
-				NpgsqlParameter cardIdParam = new NpgsqlParameter("@id", NpgsqlTypes.NpgsqlDbType.Bigint);
-				cardIdParam.Value = label.CardId;
-
-				cm.Parameters.Add(nameParam);
-				cm.Parameters.Add(colorParam);
-				cm.Parameters.Add(cardIdParam);
-
-				cm.Prepare();
-				cm.ExecuteNonQuery();
-			}*/
-			_cardLabelRepository.Add(label);
+			return _cardLabelRepository.AddAsync(entity);
 		}
 
-		public async Task AddAsync(Label entity)
+
+		public Task<List<Label>> FindAsync(Expression<Func<Label, bool>> expression)
 		{
-			await _cardLabelRepository.AddAsync(entity);
+			return _cardLabelRepository.FindAsync(expression);
 		}
 
-		public void AddRange(IEnumerable<Label> entities)
+		public Task<List<Label>> GetAllAsync()
 		{
-			throw new NotImplementedException();
+			return _cardLabelRepository.GetAllAsync();
 		}
 
-		public async Task AddRangeAsync(IEnumerable<Label> entities)
+		public Task<Label> GetByIdAsync(long id)
 		{
-			await _cardLabelRepository.AddRangeAsync(entities);
+			return _cardLabelRepository.GetByIdAsync(id);
 		}
 
-		public IEnumerable<Label> Find(Expression<Func<Label, bool>> expression)
+		public Task RemoveAsync(long id)
 		{
-			return _cardLabelRepository.Find(expression);
-		}
-
-		public async Task<IEnumerable<Label>> FindAsync(Expression<Func<Label, bool>> expression)
-		{
-			return await _cardLabelRepository.FindAsync(expression);
-		}
-
-		public IEnumerable<Label> GetAll()
-		{
-			return _cardLabelRepository.GetAll();
-		}
-
-		public async Task<IEnumerable<Label>> GetAllAsync()
-		{
-			return await _cardLabelRepository.GetAllAsync();
-		}
-
-		public Label GetById(long id)
-		{
-			return _cardLabelRepository.GetById(id);
-		}
-
-		public async Task<Label> GetByIdAsync(long id)
-		{
-			return await _cardLabelRepository.GetByIdAsync(id);
-		}
-
-		public void Remove(long id)
-		{
-			/*using (var connection = new NpgsqlConnection(_connectionString))
-			{
-				connection.Open();
-				var cm = new NpgsqlCommand("delete from labels where id = @id; ", connection);
-
-
-				NpgsqlParameter idParam = new NpgsqlParameter("@id", NpgsqlTypes.NpgsqlDbType.Bigint);
-				idParam.Value = id;
-
-				cm.Parameters.Add(idParam);
-
-				cm.Prepare();
-				cm.ExecuteNonQuery();
-			}*/
-			_cardLabelRepository.Remove(id);
-		}
-
-		public async Task RemoveAsync(long id)
-		{
-			await _cardLabelRepository.RemoveAsync(id);
+			return _cardLabelRepository.RemoveAsync(id);
 		}
 
 		public void RemoveRange(IEnumerable<Label> entities)
@@ -121,14 +53,9 @@ namespace TrelloClone.Services
 			throw new NotImplementedException();
 		}
 
-		public  void Update(Label entity)
+		public Task UpdateAsync(Label entity)
 		{
-			_cardLabelRepository.Update(entity);
-		}
-
-		public async Task UpdateAsync(Label entity)
-		{
-			await _cardLabelRepository.UpdateAsync(entity);
+			return _cardLabelRepository.UpdateAsync(entity);
 		}
 	}
 }

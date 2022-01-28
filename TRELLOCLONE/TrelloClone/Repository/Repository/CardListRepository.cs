@@ -22,58 +22,26 @@ namespace Repository
 			_dbContext = dbContext;
 			_connectionString = Environment.GetEnvironmentVariable("adoString");
 		}
-		public void Add(CardList entity)
-		{
-			_dbContext.CardLists.Add(entity);
-			_dbContext.SaveChanges();
-		}
-
+		
 		public async Task AddAsync(CardList entity)
 		{
 			await _dbContext.CardLists.AddAsync(entity);
 			await _dbContext.SaveChangesAsync();
 		}
 
-		public void AddRange(IEnumerable<CardList> entities)
+		public Task<List<CardList>> FindAsync(Expression<Func<CardList, bool>> expression)
 		{
-			_dbContext.CardLists.AddRange(entities);
-			_dbContext.SaveChanges();
+			return _dbContext.CardLists.Where(expression).ToListAsync();
 		}
 
-		public async Task AddRangeAsync(IEnumerable<CardList> entities)
+		public Task<List<CardList>> GetAllAsync()
 		{
-			await _dbContext.CardLists.AddRangeAsync(entities);
-			await _dbContext.SaveChangesAsync();
+			return _dbContext.CardLists.ToListAsync();
 		}
 
-		public IEnumerable<CardList> Find(Expression<Func<CardList, bool>> expression)
+		public  Task<CardList> GetByIdAsync(long id)
 		{
-			return _dbContext.CardLists.Where(expression);
-		}
-
-		public async Task<IEnumerable<CardList>> FindAsync(Expression<Func<CardList, bool>> expression)
-		{
-			return await _dbContext.CardLists.Where(expression).ToListAsync();
-		}
-
-		public IEnumerable<CardList> GetAll()
-		{
-			return _dbContext.CardLists;
-		}
-
-		public async Task<IEnumerable<CardList>> GetAllAsync()
-		{
-			return await _dbContext.CardLists.ToListAsync();
-		}
-
-		public CardList GetById(long id)
-		{
-			return _dbContext.CardLists.SingleOrDefault(cl => cl.Id == id);
-		}
-
-		public async Task<CardList> GetByIdAsync(long id)
-		{
-			return await _dbContext.CardLists.SingleOrDefaultAsync(cl => cl.Id == id);
+			return _dbContext.CardLists.SingleOrDefaultAsync(cl => cl.Id == id);
 		}
 
 		public void Remove(long id)
@@ -112,26 +80,15 @@ namespace Repository
 			await _dbContext.SaveChangesAsync();
 		}
 
-		public void RemoveRange(IEnumerable<CardList> entities)
-		{
-			throw new NotImplementedException();
-		}
-
 		public Task RemoveRangeAsync(IEnumerable<CardList> entities)
 		{
 			throw new NotImplementedException();
 		}
 
-		public void Update(CardList entity)
+		public Task UpdateAsync(CardList entity)
 		{
 			_dbContext.CardLists.Update(entity);
-			_dbContext.SaveChanges();
-		}
-
-		public async Task UpdateAsync(CardList entity)
-		{
-			_dbContext.CardLists.Update(entity);
-			await _dbContext.SaveChangesAsync();
+			return _dbContext.SaveChangesAsync();
 		}
 	}
 }

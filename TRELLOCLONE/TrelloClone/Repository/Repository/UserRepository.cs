@@ -20,52 +20,22 @@ namespace Repository.Repository
 			_dbContext = dbContext;
 			_connectionString = connectionString;
 		}
-		public void Add(User entity)
-		{
-			_dbContext.Users.Add(entity);
-			_dbContext.SaveChanges();
-		}
-
+	
 		public async Task AddAsync(User entity)
 		{
 			await _dbContext.AddAsync(entity);
 			await _dbContext.SaveChangesAsync();
 		}
 
-		public void AddRange(IEnumerable<User> entities)
+
+		public Task<List<User>> FindAsync(Expression<Func<User, bool>> expression)
 		{
-			_dbContext.Users.AddRange(entities);
-			_dbContext.SaveChanges();
+			return _dbContext.Users.Where(expression).ToListAsync();
 		}
 
-		public Task AddRangeAsync(IEnumerable<User> entities)
+		public Task<List<User>> GetAllAsync()
 		{
-			throw new NotImplementedException();
-		}
-
-		public IEnumerable<User> Find(Expression<Func<User, bool>> expression)
-		{
-			return _dbContext.Users.Where(expression);
-		}
-
-		public async Task<IEnumerable<User>> FindAsync(Expression<Func<User, bool>> expression)
-		{
-			return await _dbContext.Users.Where(expression).ToListAsync();
-		}
-
-		public IEnumerable<User> GetAll()
-		{
-			return _dbContext.Users;
-		}
-
-		public async Task<IEnumerable<User>> GetAllAsync()
-		{
-			return await _dbContext.Users.ToListAsync();
-		}
-
-		public User GetById(long id)
-		{
-			return _dbContext.Users.SingleOrDefault(u => u.Id == id);
+			return _dbContext.Users.ToListAsync();
 		}
 
 		public Task<User> GetByIdAsync(long id)
@@ -126,26 +96,16 @@ namespace Repository.Repository
 			await _dbContext.SaveChangesAsync();
 		}
 
-		public void RemoveRange(IEnumerable<User> entities)
-		{
-			throw new NotImplementedException();
-		}
-
 		public Task RemoveRangeAsync(IEnumerable<User> entities)
 		{
 			throw new NotImplementedException();
 		}
 
-		public void Update(User entity)
+		public Task UpdateAsync(User entity)
 		{
 			_dbContext.Users.Update(entity);
-			_dbContext.SaveChanges();
-		}
-
-		public async Task UpdateAsync(User entity)
-		{
-			_dbContext.Users.Update(entity);
-			await _dbContext.SaveChangesAsync();
+			return _dbContext.SaveChangesAsync();
+			
 		}
 	}
 }

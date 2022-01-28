@@ -16,52 +16,46 @@ namespace TrelloClone.Controllers
 	[ApiController]
 	public class UserController : ControllerBase
 	{
-		private readonly IUserService _userService;
+		private readonly UserService _userService;
 
-		public UserController(IUserService userService)
+		public UserController(UserService userService)
 		{
 			_userService = userService;
 		}
 
 		// GET: api/users
 		[HttpGet]
-		public IEnumerable<User> Get()
+		public async Task<IEnumerable<User>> GetAsync()
 		{
-			return _userService.GetAll();
+			return await _userService.GetAllAsync();
 		}
 
 		// GET api/users/5
 		[HttpGet("{id}")]
-		public User GetUserById(long id)
+		public async Task<User> GetUserByIdAsync(long id)
 		{
-			return _userService.GetById(id);
-		}
-
-		[HttpGet("boards/{userId}")]
-		IEnumerable<Board> GetAllBoardsForUser(long userId)
-		{
-			return null;
+			return await _userService.GetByIdAsync(id);
 		}
 
 		// POST api/users
 		[HttpPost]
-		public void Post([FromBody] User user)
+		public async Task Post([FromBody] User user)
 		{
-			_userService.Add(user);
+			await _userService.AddAsync(user);
 		}
 
 		// PUT api/users
 		[HttpPut]
-		public void Put([FromBody] User user)
+		public async Task PutAsync([FromBody] User user)
 		{
-			_userService.Update(user);
+			await _userService.UpdateAsync(user);
 		}
 
 		// DELETE api/users/5
 		[HttpDelete("{id}")]
-		public void Delete(long id)
+		public async Task DeleteAsync(long id)
 		{
-			_userService.Remove(id);
+			await _userService.RemoveAsync(id);
 		}
 	}
 }

@@ -54,11 +54,11 @@ namespace TrelloClone
             services.AddTransient<ICardListRepository, CardListRepository>();
             services.AddTransient<ICardRepository, CardRepository>();
             services.AddTransient<ICardLabelRepository, CardLabelRepository>();
-            services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IBoardService, BoardService>();
-            services.AddScoped<ICardListService, CardListService>();
-            services.AddScoped<ICardService, CardService>();
-            services.AddScoped<ICardLabelService, LabelService>();
+            services.AddScoped<UserService>();
+            services.AddScoped<BoardService>();
+            services.AddScoped<CardListService>();
+            services.AddScoped<CardService>();
+            services.AddScoped<LabelService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

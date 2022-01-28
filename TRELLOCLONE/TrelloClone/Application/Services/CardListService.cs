@@ -10,8 +10,8 @@ using TrelloClone.Models;
 
 namespace TrelloClone.Services
 {
-	public class CardListService : ICardListService
-	{
+	public class CardListService 
+	{ 
 		private readonly ICardListRepository _cardListRepository;
 
 		public CardListService(ICardListRepository cardListRepository)
@@ -19,108 +19,30 @@ namespace TrelloClone.Services
 			_cardListRepository = cardListRepository;
 		}
 
-		public void Update(CardList cardList)
+
+		public Task<CardList> GetByIdAsync(long id)
 		{
-			/*using (var connection = new NpgsqlConnection(_connectionString))
-			{
-				connection.Open();
-				var cm = new NpgsqlCommand("UPDATE cardlists SET name = @name WHERE id = @id; ", connection);
-
-				NpgsqlParameter nameParam = new NpgsqlParameter("@name", NpgsqlTypes.NpgsqlDbType.Varchar, cardList.Name.Length);
-				nameParam.Value = cardList.Name;
-
-				NpgsqlParameter idParam = new NpgsqlParameter("@id", NpgsqlTypes.NpgsqlDbType.Bigint);
-				idParam.Value = cardList.Id;
-
-				cm.Parameters.Add(nameParam);
-				cm.Parameters.Add(idParam);
-
-				cm.Prepare();
-				cm.ExecuteNonQuery();
-			};*/
-			_cardListRepository.Update(cardList);
+			return _cardListRepository.GetByIdAsync(id);
 		}
 
-		public void Remove(long id)
+		public Task<List<CardList>> GetAllAsync()
 		{
-			_cardListRepository.Remove(id);
+			return _cardListRepository.GetAllAsync();
 		}
 
-		public void Add(CardList cardList)
+		public Task<List<CardList>> FindAsync(Expression<Func<CardList, bool>> expression)
 		{
-			/*using (var connection = new NpgsqlConnection(_connectionString))
-			{
-				connection.Open();
-				var cm = new NpgsqlCommand("INSERT INTO public.cardlists(name, board_id) VALUES (@name, @board_id);", connection);
-
-				NpgsqlParameter nameParam = new NpgsqlParameter("@name", NpgsqlTypes.NpgsqlDbType.Varchar, cardList.Name.Length);
-				nameParam.Value = cardList.Name;
-
-				NpgsqlParameter idParam = new NpgsqlParameter("@url", NpgsqlTypes.NpgsqlDbType.Bigint);
-				idParam.Value = boardId;
-
-				cm.Parameters.Add(nameParam);
-				cm.Parameters.Add(idParam);
-
-				cm.Prepare();
-				cm.ExecuteNonQuery();
-			}*/
-			_cardListRepository.Add(cardList);
+			return _cardListRepository.FindAsync(expression);
 		}
 
-		public CardList GetById(long id)
+		public Task AddAsync(CardList entity)
 		{
-			return _cardListRepository.GetById(id);
+			return _cardListRepository.AddAsync(entity);
 		}
 
-		public IEnumerable<CardList> GetAll()
+		public Task RemoveAsync(long id)
 		{
-			return _cardListRepository.GetAll();
-		}
-
-		public IEnumerable<CardList> Find(Expression<Func<CardList, bool>> expression)
-		{
-			return _cardListRepository.Find(expression);
-		}
-
-		public void AddRange(IEnumerable<CardList> entities)
-		{
-			throw new NotImplementedException();
-		}
-
-		public void RemoveRange(IEnumerable<CardList> entities)
-		{
-			throw new NotImplementedException();
-		}
-
-		public async Task<CardList> GetByIdAsync(long id)
-		{
-			return await _cardListRepository.GetByIdAsync(id);
-		}
-
-		public async Task<IEnumerable<CardList>> GetAllAsync()
-		{
-			return await _cardListRepository.GetAllAsync();
-		}
-
-		public async Task<IEnumerable<CardList>> FindAsync(Expression<Func<CardList, bool>> expression)
-		{
-			return await _cardListRepository.FindAsync(expression);
-		}
-
-		public async Task AddAsync(CardList entity)
-		{
-			await _cardListRepository.AddAsync(entity);
-		}
-
-		public async Task AddRangeAsync(IEnumerable<CardList> entities)
-		{
-			await _cardListRepository.AddRangeAsync(entities);
-		}
-
-		public async Task RemoveAsync(long id)
-		{
-			await _cardListRepository.RemoveAsync(id);
+			return _cardListRepository.RemoveAsync(id);
 		}
 
 		public Task RemoveRangeAsync(IEnumerable<CardList> entities)
@@ -128,9 +50,9 @@ namespace TrelloClone.Services
 			throw new NotImplementedException();
 		}
 
-		public async Task UpdateAsync(CardList entity)
+		public Task UpdateAsync(CardList entity)
 		{
-			await _cardListRepository.UpdateAsync(entity);
+			return _cardListRepository.UpdateAsync(entity);
 		}
 	}
 }

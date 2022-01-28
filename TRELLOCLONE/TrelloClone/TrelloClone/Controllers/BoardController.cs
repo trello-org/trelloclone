@@ -16,48 +16,48 @@ namespace TrelloClone.Controllers
 	public class BoardController : ControllerBase
 	{
 
-		private readonly IBoardService _boardService;
+		private readonly BoardService _boardService;
 
-		public BoardController(IBoardService boardService)
+		public BoardController(BoardService boardService)
 		{
 			_boardService = boardService;
 		}
 
 		// GET: api/boards
 		[HttpGet("users/{id}")]
-		public IEnumerable<Board> GetAllBoards(long id)
+		public async Task<IEnumerable<Board>> GetAllBoardsAsync(long id)
 		{
-			return _boardService.GetAllBoardsForUser(id); 
+			return await _boardService.GetAllBoardsForUserAsync(id); 
 		}
 
 		// GET api/boards/5
 		[HttpGet("{id}")]
-		public Board Get(long id)
+		public async Task<Board> GetAsync(long id)
 		{
-			return _boardService.GetById(id);
+			return await _boardService.GetByIdAsync(id);
 		}
 
 		
 
 		// POST api/boards
 		[HttpPost("{userId}")]
-		public void Post(long userId, [FromBody] Board board)
+		public async Task PostAsync(long userId, [FromBody] Board board)
 		{
-			_boardService.Add(board);
+			await _boardService.AddAsync(board);
 		}
 
 		// PUT api/boards
 		[HttpPut]
-		public void Put([FromBody] Board board)
+		public async Task PutAsync([FromBody] Board board)
 		{
-			_boardService.Update(board);
+			await _boardService.UpdateAsync(board);
 		}
 
 		// DELETE api/<BoardController>/5
 		[HttpDelete("{id}")]
-		public void Delete(long id) 
+		public async Task DeleteAsync(long id) 
 		{
-			_boardService.Remove(id);
+			await _boardService.RemoveAsync(id);
 		}
 	}
 }
