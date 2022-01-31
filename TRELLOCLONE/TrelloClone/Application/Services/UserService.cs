@@ -18,6 +18,11 @@ namespace TrelloClone.Services
 			_userRepository = userRepository;
 		}
 
+		public Task<User> FindByUsernameAsync(string username)
+		{
+			return _userRepository.FindByUsernameAsync(username);
+		}
+
 		public Task<User> GetByIdAsync(long id)
 		{
 			return _userRepository.GetByIdAsync(id);

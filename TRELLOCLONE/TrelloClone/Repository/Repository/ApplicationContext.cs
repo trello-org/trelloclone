@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TrelloClone.Models;
 
-namespace TrelloClone
+namespace Repository
 {
 	public class ApplicationContext : DbContext
 	{

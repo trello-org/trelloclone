@@ -28,9 +28,12 @@ namespace Repository.Repository
 		}
 
 
-		public Task<List<User>> FindAsync(Expression<Func<User, bool>> expression)
+		public Task<List<User>> FindAsync(Expression<Func<User, bool>> expression) => 
+			_dbContext.Users.Where(expression).ToListAsync();
+
+		public Task<User> FindByUsernameAsync(string username)
 		{
-			return _dbContext.Users.Where(expression).ToListAsync();
+			return _dbContext.Users.SingleOrDefaultAsync(u => u.Username.Equals(username));
 		}
 
 		public Task<List<User>> GetAllAsync()
@@ -47,12 +50,12 @@ namespace Repository.Repository
 		{
 			User toBeRemoved = _dbContext.Users
 				.Where(u => u.Id == id)
-				.Include(b => b.Boards)
+				/*.Include(b => b.Boards)
 				.ThenInclude(cl => cl.CardLists)
 				.ThenInclude(c => c.Cards)
-				.ThenInclude(l => l.Labels)
+				.ThenInclude(l => l.Labels)*/
 				.FirstOrDefault();
-			foreach (Board b in toBeRemoved.Boards)
+			/*foreach (Board b in toBeRemoved.Boards)
 			{
 				foreach (CardList cl in b.CardLists)
 				{
@@ -64,7 +67,7 @@ namespace Repository.Repository
 				}
 				_dbContext.CardLists.RemoveRange(b.CardLists);
 			}
-			_dbContext.Boards.RemoveRange(toBeRemoved.Boards);
+			_dbContext.Boards.RemoveRange(toBeRemoved.Boards);*/
 			_dbContext.Users.Remove(toBeRemoved);
 			_dbContext.SaveChanges();
 

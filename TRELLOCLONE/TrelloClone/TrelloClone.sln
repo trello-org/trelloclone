@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Repository", "Repository\Re
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "Application\Application.csproj", "{F9C65635-B772-4119-9611-5E1749CFBB13}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrelloCloneMVC", "TrelloCloneMVC\TrelloCloneMVC.csproj", "{DC19F981-A2AE-4FC2-A858-ABE8C1118C33}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{F9C65635-B772-4119-9611-5E1749CFBB13}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F9C65635-B772-4119-9611-5E1749CFBB13}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F9C65635-B772-4119-9611-5E1749CFBB13}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DC19F981-A2AE-4FC2-A858-ABE8C1118C33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC19F981-A2AE-4FC2-A858-ABE8C1118C33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC19F981-A2AE-4FC2-A858-ABE8C1118C33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC19F981-A2AE-4FC2-A858-ABE8C1118C33}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -9,5 +9,6 @@ namespace Repository.Repository
 {
 	public interface IUserRepository : IRepository<User>
 	{
+		Task<User> FindByUsernameAsync(string username);
 	}
 }

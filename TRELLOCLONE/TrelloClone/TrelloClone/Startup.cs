@@ -1,3 +1,4 @@
+using Application.Middleware;
 using Application.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -74,6 +75,8 @@ namespace TrelloClone
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseMiddleware<ErrorHandlerMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {
