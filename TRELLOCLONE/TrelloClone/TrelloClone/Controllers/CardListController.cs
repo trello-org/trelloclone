@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Application.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,20 +23,20 @@ namespace TrelloClone.Controllers
 		}
 
 		[HttpPut]
-		public void Put([FromBody] CardList cardList)
+		public async Task PutAsync([FromBody] CardList cardList)
 		{
-			_cardListService.UpdateCardList(cardList);
+			await _cardListService.UpdateAsync(cardList);
 		}
 		[HttpDelete("id")]
-		public void Delete(long id)
+		public async Task DeleteAsync(long id)
 		{
-			_cardListService.DeleteCardList(id);
+			await _cardListService.RemoveAsync(id);
 		}
 
-		[HttpPost("boardId")]
-		public void CreateCardListForBoard(long boardId, [FromBody] CardList cardList)
+		[HttpPost]
+		public async Task CreateCardListForBoardAsync([FromBody] CardList cardList)
 		{
-			_cardListService.CreateCardListForBoard(boardId, cardList);
+			await _cardListService.AddAsync(cardList);
 		}
 
 		

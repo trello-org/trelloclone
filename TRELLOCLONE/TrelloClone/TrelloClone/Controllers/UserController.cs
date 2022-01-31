@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Application.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -24,43 +25,37 @@ namespace TrelloClone.Controllers
 
 		// GET: api/users
 		[HttpGet]
-		public IEnumerable<User> Get()
+		public async Task<IEnumerable<User>> GetAsync()
 		{
-			return _userService.GetAllUsers();
+			return await _userService.GetAllAsync();
 		}
 
 		// GET api/users/5
 		[HttpGet("{id}")]
-		public User GetUserById(long id)
+		public async Task<User> GetUserByIdAsync(long id)
 		{
-			return _userService.GetUserById(id);
-		}
-
-		[HttpGet("boards/{userId}")]
-		public IEnumerable<Board> GetAllBoardsForUser(long userId)
-		{
-			return _userService.GetAllBoardsForUser(userId);
+			return await _userService.GetByIdAsync(id);
 		}
 
 		// POST api/users
 		[HttpPost]
-		public void Post([FromBody] User user)
+		public async Task Post([FromBody] User user)
 		{
-			_userService.CreateUser(user);
+			await _userService.AddAsync(user);
 		}
 
 		// PUT api/users
 		[HttpPut]
-		public void Put([FromBody] User user)
+		public async Task PutAsync([FromBody] User user)
 		{
-			_userService.EditUser(user);
+			await _userService.UpdateAsync(user);
 		}
 
 		// DELETE api/users/5
 		[HttpDelete("{id}")]
-		public void Delete(long id)
+		public async Task DeleteAsync(long id)
 		{
-			_userService.DeleteUser(id);
+			await _userService.RemoveAsync(id);
 		}
 	}
 }

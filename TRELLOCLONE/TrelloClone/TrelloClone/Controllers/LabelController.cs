@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Application.Services.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -13,23 +14,23 @@ namespace TrelloClone.Controllers
 	[ApiController]
 	public class LabelController : ControllerBase
 	{
-		private readonly LabelService _labelService;
+		private readonly ICardLabelService _labelService;
 
-		public LabelController(LabelService labelService)
+		public LabelController(ICardLabelService labelService)
 		{
 			_labelService = labelService;
 		}
 
 		[HttpPost]
-		public void CreateLabel([FromBody] Label label)
+		public async Task CreateLabelAsync([FromBody] Label label)
 		{
-			_labelService.CreateLabel(label);
+			await _labelService.AddAsync(label);
 		}
 		
 		[HttpDelete("{id}")]
-		public void DeleteLabel(long id)
+		public async Task DeleteLabelAsync(long id)
 		{
-			_labelService.DeleteLabel(id);
+			await _labelService.RemoveAsync(id);
 		}
 	}
 }

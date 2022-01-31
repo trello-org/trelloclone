@@ -1,3 +1,4 @@
+using Application.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -8,11 +9,14 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Npgsql;
+using Repository;
+using Repository.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TrelloClone.Services;
+using TrelloClone.Utils;
 
 namespace TrelloClone
 {
@@ -34,19 +38,27 @@ namespace TrelloClone
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "TrelloClone", Version = "v1" });
             });
-            /*
+        
             var connectionString = Configuration["PostgreSql:ConnectionString"];
             var dbPassword = Configuration["PostgreSql:DbPassword"];
+           
             var builder = new NpgsqlConnectionStringBuilder(connectionString)
             {
                 Password = dbPassword
             };
             services.AddDbContext<ApplicationContext>(options => options.UseNpgsql(builder.ConnectionString));
-            */
+
+            services.AddSingleton(_ => Configuration["PostgreSql:ConnectionStringAdo"]);
+            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IBoardRepository, BoardRepository>();
+            services.AddTransient<ICardListRepository, CardListRepository>();
+            services.AddTransient<ICardRepository, CardRepository>();
+            services.AddTransient<ICardLabelRepository, CardLabelRepository>();
             services.AddScoped<UserService>();
             services.AddScoped<BoardService>();
-            //services.AddScoped<CardListService>();
-            //services.AddScoped<CardService>();
+            services.AddScoped<CardListService>();
+            services.AddScoped<CardService>();
+            services.AddScoped<LabelService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
