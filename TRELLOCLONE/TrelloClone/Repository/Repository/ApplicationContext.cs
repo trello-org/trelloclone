@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using TrelloClone.Models;
 
@@ -22,6 +23,10 @@ namespace Repository
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
+			// modelBuilder.ApplyConfigurationsFromAssembly(Assembly.Load("TrelloClone.Repository"));
+
+			// modelBuilder.ApplyConfiguration(new UserEntityTypeConfiguration());
+
 			modelBuilder.Entity<User>().ToTable("users");
 			modelBuilder.Entity<User>().HasIndex(u => u.Username).IsUnique();
 			modelBuilder.Entity<User>(u =>

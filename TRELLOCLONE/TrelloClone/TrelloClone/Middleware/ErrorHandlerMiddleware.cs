@@ -47,7 +47,7 @@ namespace Application.Middleware
                         break;
                 }
 
-                var result = JsonSerializer.Serialize(new { message = error?.Message });
+                var result = JsonSerializer.Serialize(new { message = error.Message });
                 await response.WriteAsync(result);
             }
         }

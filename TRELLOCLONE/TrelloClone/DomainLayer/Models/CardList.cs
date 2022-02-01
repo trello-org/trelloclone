@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace TrelloClone.Models
 {
-    [Table("cardlists")]
+    //[Table("cardlists")]
     public class CardList
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [Key]
+        //[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+       //[Key]
         private long _id;
         [Required]
         private string _name;
