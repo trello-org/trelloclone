@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Repository.EntityTypeConfigurations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,14 +14,14 @@ namespace Repository.Repository
 	public class UserRepository : IUserRepository
 	{
 		private readonly ApplicationContext _dbContext;
-		private readonly string _connectionString;
+		private readonly ConnectionStrings _connectionStrings;
 
-		public UserRepository(ApplicationContext dbContext, string connectionString)
+		public UserRepository(ApplicationContext dbContext, ConnectionStrings connectionStrings)
 		{
 			_dbContext = dbContext;
-			_connectionString = connectionString;
+			_connectionStrings = connectionStrings; ;
 		}
-	
+
 		public async Task AddAsync(User entity)
 		{
 			await _dbContext.AddAsync(entity);

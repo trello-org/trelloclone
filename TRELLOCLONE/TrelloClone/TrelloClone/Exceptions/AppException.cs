@@ -1,7 +1,10 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Net;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace TrelloClone.Exceptions
@@ -9,7 +12,28 @@ namespace TrelloClone.Exceptions
     public class AppException : Exception
     {
         public int StatusCode;
+        
         public AppException() : base() { }
+
+        public AppException(Exception ex) : base()
+		{
+            switch (ex)
+            {
+                case AppException e:
+                    // custom application error
+                    if (e.StatusCode == 0) e.StatusCode = (int)HttpStatusCode.BadRequest;
+                    StatusCode = e.StatusCode;
+                    break;
+                case KeyNotFoundException e:
+                    // not found error
+                    StatusCode = (int)HttpStatusCode.NotFound;
+                    break;
+                default:
+                    // unhandled error
+                    StatusCode = (int)HttpStatusCode.InternalServerError;
+                    break;
+            }
+        }
 
         public AppException(string message) : base(message) {
             StatusCode = 400;
@@ -24,5 +48,23 @@ namespace TrelloClone.Exceptions
             : base(String.Format(CultureInfo.CurrentCulture, message, args))
         {
         }
+
+        public static int SetStatusCode(Exception ex)
+		{
+            switch (ex)
+            {
+                case AppException e:
+                    // custom application error
+                    if (e.StatusCode == 0) return (int)HttpStatusCode.BadRequest;
+                    return e.StatusCode;
+                case KeyNotFoundException e:
+                    // not found error
+                    return (int)HttpStatusCode.NotFound;
+                default:
+                    // unhandled error
+                    return (int)HttpStatusCode.InternalServerError;
+            }
+        }
+
     }
 }

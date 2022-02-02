@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TrelloClone.Filters;
 using TrelloClone.Models;
 using TrelloClone.Services;
 
@@ -13,6 +14,7 @@ using TrelloClone.Services;
 
 namespace TrelloClone.Controllers
 {
+	
 	[Route("api/users")]
 	[ApiController]
 	public class UserController : ControllerBase
@@ -38,6 +40,7 @@ namespace TrelloClone.Controllers
 
 		// GET api/users/5
 		[HttpGet("{id}")]
+		[TypeFilter(typeof(LogAttribute))]
 		public async Task<User> GetUserByIdAsync(long id)
 		{
 			_logger.LogInformation($"Fetching user with ID {id}");
@@ -47,7 +50,7 @@ namespace TrelloClone.Controllers
 				_logger.LogInformation($"Could not find user with ID {id}");
 				return user;
 			}
-			_logger.LogInformation($"User successfully fetched.");
+			_logger.LogInformation($"User successfully fetchedddddd.");
 			return await _userService.GetByIdAsync(id);
 		}
 
