@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Repository.EntityTypeConfigurations;
 using System;
 using System.Collections.Generic;
@@ -15,11 +16,13 @@ namespace Repository.Repository
 	{
 		private readonly ApplicationContext _dbContext;
 		private readonly ConnectionStrings _connectionStrings;
+		private readonly IMemoryCache _memoryCache;
 
-		public UserRepository(ApplicationContext dbContext, ConnectionStrings connectionStrings)
+		public UserRepository(ApplicationContext dbContext, ConnectionStrings connectionStrings, IMemoryCache memoryCache)
 		{
 			_dbContext = dbContext;
-			_connectionStrings = connectionStrings; ;
+			_connectionStrings = connectionStrings;
+			_memoryCache = memoryCache;
 		}
 
 		public async Task AddAsync(User entity)
@@ -28,6 +31,27 @@ namespace Repository.Repository
 			await _dbContext.SaveChangesAsync();
 		}
 
+		public async Task<int> CountUsersAsync()
+		{
+			var cacheKey = "userCount";
+			//checks if cache entries exists
+			if (!_memoryCache.TryGetValue(cacheKey, out int userCount))
+			{
+				//calling the server
+				userCount = await _dbContext.Users.CountAsync();
+
+				//setting up cache options
+				var cacheExpiryOptions = new MemoryCacheEntryOptions
+				{
+					AbsoluteExpiration = DateTime.Now.AddSeconds(50),
+					Priority = CacheItemPriority.High,
+					SlidingExpiration = TimeSpan.FromSeconds(20)
+				};
+				//setting cache entries
+				_memoryCache.Set(cacheKey, userCount, cacheExpiryOptions);
+			}
+			return userCount;
+		}
 
 		public Task<List<User>> FindAsync(Expression<Func<User, bool>> expression) => 
 			_dbContext.Users.Where(expression).ToListAsync();

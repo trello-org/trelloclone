@@ -17,7 +17,7 @@ namespace TrelloClone
     {
         public static void Main(string[] args)
         {
-            var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
+            var logger = LogManager.GetCurrentClassLogger();
 
             try
             {

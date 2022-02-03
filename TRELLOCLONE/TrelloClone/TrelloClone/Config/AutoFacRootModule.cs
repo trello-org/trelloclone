@@ -14,7 +14,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Web.Http.Filters;
 using TrelloClone.Filters;
-using TrelloClone.Services;
+using Application.Services;
 using TrelloClone.Utils;
 
 namespace TrelloClone.Config
@@ -38,8 +38,8 @@ namespace TrelloClone.Config
                 Password = dbPassword
             };
 
-            builder.RegisterType<LoggerFactory>().As<ILoggerFactory>().SingleInstance();
-            builder.RegisterGeneric(typeof(Logger<>)).As(typeof(ILogger<>)).SingleInstance();
+            // builder.RegisterType<LoggerFactory>().As<ILoggerFactory>().SingleInstance();
+            // builder.RegisterGeneric(typeof(Logger<>)).As(typeof(ILogger<>)).SingleInstance();
 
             builder.Register(cs => { return new ConnectionStrings(_configuration); }).AsSelf().SingleInstance();
 
@@ -54,18 +54,32 @@ namespace TrelloClone.Config
             }).InstancePerLifetimeScope();
 
 
-            builder.RegisterType<UserRepository>().As<IUserRepository>().InstancePerLifetimeScope();
+
+            /*builder.RegisterType<UserRepository>().As<IUserRepository>().InstancePerLifetimeScope();
             builder.RegisterType<BoardRepository>().As<IBoardRepository>().InstancePerLifetimeScope();
             builder.RegisterType<CardListRepository>().As<ICardListRepository>().InstancePerLifetimeScope();
             builder.RegisterType<CardRepository>().As<ICardRepository>().InstancePerLifetimeScope();
-            builder.RegisterType<CardLabelRepository>().As<ICardLabelRepository>().InstancePerLifetimeScope();
-            builder.RegisterType<UserService>().AsSelf();
-            builder.RegisterType<BoardService>().AsSelf();
-            builder.RegisterType<CardListService>().AsSelf();
-            builder.RegisterType<CardService>().AsSelf();
-            builder.RegisterType<LabelService>().AsSelf();
-            
+            builder.RegisterType<CardLabelRepository>().As<ICardLabelRepository>().InstancePerLifetimeScope();*/
 
-        }
+            var repoAccess = AppDomain.CurrentDomain.GetAssemblies().Single(x => x.FullName.Contains("Repository"));
+
+            builder.RegisterAssemblyTypes(repoAccess)
+                   .Where(t => t.Name.EndsWith("Repository"))
+                   .AsImplementedInterfaces();
+
+            var serviceAccess = AppDomain.CurrentDomain.GetAssemblies().Single(x => x.FullName.Contains("Application"));
+
+			/*builder.RegisterAssemblyTypes(serviceAccess)
+                   .Where(t => t.Name.EndsWith("Service"))
+                   .AsSelf();*/
+
+			builder.RegisterType<UserService>().AsSelf();
+			builder.RegisterType<BoardService>().AsSelf();
+			builder.RegisterType<CardListService>().AsSelf();
+			builder.RegisterType<CardService>().AsSelf();
+			builder.RegisterType<LabelService>().AsSelf();
+
+
+		}
     }
 }

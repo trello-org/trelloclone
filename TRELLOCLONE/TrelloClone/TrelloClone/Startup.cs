@@ -18,7 +18,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TrelloClone.Config;
-using TrelloClone.Services;
+using Application.Services;
 using TrelloClone.Utils;
 
 namespace TrelloClone
@@ -41,7 +41,7 @@ namespace TrelloClone
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "TrelloClone", Version = "v1" });
             });
-
+            services.AddMemoryCache();
             /*
         
             var connectionString = Configuration["PostgreSql:ConnectionString"];

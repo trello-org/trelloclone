@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using TrelloClone.Models;
 
-namespace TrelloClone.Services
+namespace Application.Services
 {
 	public class UserService
 	{
@@ -17,6 +17,8 @@ namespace TrelloClone.Services
 		{
 			_userRepository = userRepository;
 		}
+
+		public Task<int> CountUsersAsync() => _userRepository.CountUsersAsync();
 
 		public Task<User> FindByUsernameAsync(string username)
 		{

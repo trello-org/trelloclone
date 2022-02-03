@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using TrelloClone.Exceptions;
+using TrelloClone.Exceptions.ExceptionFactory;
 
 namespace Application.Middleware
 {
@@ -31,17 +32,10 @@ namespace Application.Middleware
             catch (Exception ex)
             {
                 _logger.LogError(ex.StackTrace);
-                await CreateJSONResponse(context, ex);
+                await ExceptionThrower.CreateJSONResponse(context, ex);
             }
         }
 
-        private static async Task CreateJSONResponse(HttpContext context, Exception ex)
-        {
-            var response = context.Response;
-            response.ContentType = "application/json";
-            response.StatusCode = AppException.SetStatusCode(ex);
-            var result = JsonSerializer.Serialize(new { message = ex.Message });
-            await response.WriteAsync(result);
-        }
+        
     }
 }

@@ -29,6 +29,11 @@ namespace TrelloClone.Exceptions.ExceptionFactory
 			return (int)HttpStatusCode.BadRequest;	
 		}
 
+		public void Throw()
+		{
+			throw this;
+		}
+
 
 	}
 }
