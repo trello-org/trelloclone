@@ -19,6 +19,7 @@ namespace Repository.Config
 			builder.Property(en => en.Id).HasColumnName("id").IsRequired(); ;
 			builder.Property(en => en.Username).HasColumnName("username").IsRequired();
 			builder.Property(en => en.Password).HasColumnName("password").IsRequired();
+			builder.Property(en => en.Role).HasColumnName("role").IsRequired();
 		}
 	}
 }

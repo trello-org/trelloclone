@@ -11,6 +11,9 @@ using TrelloClone.Models;
 using Application.Services;
 using TrelloClone.Exceptions;
 
+using Domain.Constants;
+using TrelloClone.Security;
+
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace TrelloClone.Controllers
@@ -31,6 +34,8 @@ namespace TrelloClone.Controllers
 
 		// GET: api/users
 		[HttpGet]
+		[AuthorizeAttribute(Role = Role.Admin)]
+		[TypeFilter(typeof(LogAttribute))]
 		public async Task<IEnumerable<User>> GetAsync()
 		{
 			_logger.LogInformation("Fetching all users..");

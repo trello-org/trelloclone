@@ -51,7 +51,7 @@ namespace TrelloClone.Config
                 var optionsBuilder = new DbContextOptionsBuilder<ApplicationContext>();
                 optionsBuilder.UseNpgsql(bd.ConnectionString);
                 return new ApplicationContext(optionsBuilder.Options);
-            }).InstancePerLifetimeScope();
+            }).InstancePerDependency();
 
 
 

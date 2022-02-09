@@ -13,6 +13,7 @@ namespace TrelloClone.Models
         private string _username;
         private string _password;
         private IEnumerable<Board> _boards;
+        private string _role;
 
         public long Id { get { return _id; } set { _id = value; } }
         [Required]
@@ -22,8 +23,8 @@ namespace TrelloClone.Models
         [StringLength(100, ErrorMessage = "Minimum length is 8, max is 100", MinimumLength = 8)]
         [Required]
         public string Password { get { return _password; }  set { _password = value; } }
-
         public IEnumerable<Board> Boards { get { return _boards; } set { _boards = value; } }
+        public string Role { get { return _role; } set { _role = value; } }
 
     }
 }

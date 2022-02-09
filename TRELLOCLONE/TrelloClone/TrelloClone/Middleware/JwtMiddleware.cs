@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -23,14 +24,18 @@ namespace TrelloClone.Middleware
         public async Task Invoke(HttpContext context, UserService userService)
         {
             var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
-
+			Console.WriteLine(token + "****");
             if (token != null)
-                attachUserToContext(context, userService, token);
+			{
+				Console.WriteLine("Attaching user to context");
+               await AttachUserToContext(context, userService, token);
+
+			}
 
             await _next(context);
         }
 
-        private void attachUserToContext(HttpContext context, UserService userService, string token)
+        private async Task AttachUserToContext(HttpContext context, UserService userService, string token)
         {
             try
             {
@@ -49,8 +54,15 @@ namespace TrelloClone.Middleware
                 var jwtToken = (JwtSecurityToken)validatedToken;
                 var userId = int.Parse(jwtToken.Claims.First(x => x.Type == "id").Value);
 
+                //Console.WriteLine(jwtToken.Claims.First(x => x.Type == ClaimTypes.Role));
+                foreach(var claim in jwtToken.Claims)
+				{
+					Console.WriteLine(claim);
+				}
+
                 // attach user to context on successful jwt validation
-                context.Items["User"] = userService.GetByIdAsync(userId);
+                context.Items["User"] = await userService.GetByIdAsync(userId);
+				Console.WriteLine("User has been attached to context");
             }
             catch
             {
