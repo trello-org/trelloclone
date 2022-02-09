@@ -13,7 +13,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "Application\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrelloCloneMVC", "TrelloCloneMVC\TrelloCloneMVC.csproj", "{DC19F981-A2AE-4FC2-A858-ABE8C1118C33}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrelloCloneTests", "TrelloCloneTests\TrelloCloneTests.csproj", "{5F6E6E85-9C23-4CBC-B661-4B91DB21AE51}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrelloCloneTests", "TrelloCloneTests\TrelloCloneTests.csproj", "{5F6E6E85-9C23-4CBC-B661-4B91DB21AE51}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentProjectTests", "PaymentProjectTests\PaymentProjectTests.csproj", "{21F0EA07-7DA2-48FA-9849-30CEFDA43249}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp1", "ConsoleApp1\ConsoleApp1.csproj", "{08746021-8945-4EEC-A474-6C5D1ECA482D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +49,14 @@ Global
 		{5F6E6E85-9C23-4CBC-B661-4B91DB21AE51}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5F6E6E85-9C23-4CBC-B661-4B91DB21AE51}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5F6E6E85-9C23-4CBC-B661-4B91DB21AE51}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21F0EA07-7DA2-48FA-9849-30CEFDA43249}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21F0EA07-7DA2-48FA-9849-30CEFDA43249}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21F0EA07-7DA2-48FA-9849-30CEFDA43249}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21F0EA07-7DA2-48FA-9849-30CEFDA43249}.Release|Any CPU.Build.0 = Release|Any CPU
+		{08746021-8945-4EEC-A474-6C5D1ECA482D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08746021-8945-4EEC-A474-6C5D1ECA482D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08746021-8945-4EEC-A474-6C5D1ECA482D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08746021-8945-4EEC-A474-6C5D1ECA482D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

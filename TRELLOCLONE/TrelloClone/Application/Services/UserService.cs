@@ -1,9 +1,14 @@
-﻿using Application.Services.Interfaces;
+﻿using Application.Dtos;
+using Application.Services.Interfaces;
+using Microsoft.IdentityModel.Tokens;
 using Repository.Repository;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using TrelloClone.Models;
 
@@ -58,6 +63,27 @@ namespace Application.Services
 		public Task UpdateAsync(User entity)
 		{
 			return _userRepository.UpdateAsync(entity);
+		}
+
+		public Task<User> Authenticate(string username, string password)
+		{
+			return _userRepository.Authenticate(username, password);
+		}
+
+		public JwtToken GenerateJwtToken(User user)
+		{
+			// generate token that is valid for 7 days
+			var tokenHandler = new JwtSecurityTokenHandler();
+			var key = Encoding.ASCII.GetBytes("mylittlesecretkeyneedstobelongenough");
+			var tokenDescriptor = new SecurityTokenDescriptor
+			{
+				Subject = new ClaimsIdentity(new[] { new Claim("id", user.Id.ToString()) }),
+				Expires = DateTime.UtcNow.AddDays(7),
+				SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+			};
+			var token = tokenHandler.CreateToken(tokenDescriptor);
+			var ret = new JwtToken() { Token = tokenHandler.WriteToken(token), expiresOn = (DateTime)tokenDescriptor.Expires };
+			return ret;
 		}
 	}
 }

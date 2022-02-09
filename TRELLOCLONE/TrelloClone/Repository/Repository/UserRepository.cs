@@ -31,6 +31,12 @@ namespace Repository.Repository
 			await _dbContext.SaveChangesAsync();
 		}
 
+		public Task<User> Authenticate(string username, string password)
+		{
+			return _dbContext.Users.SingleOrDefaultAsync(u => u.Username == username && u.Password == password);
+
+		}
+
 		public async Task<int> CountUsersAsync()
 		{
 			var cacheKey = "userCount";

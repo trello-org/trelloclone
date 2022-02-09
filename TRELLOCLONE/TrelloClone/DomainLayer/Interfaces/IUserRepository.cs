@@ -11,5 +11,8 @@ namespace Repository.Repository
 	{
 		Task<User> FindByUsernameAsync(string username);
 		Task<int> CountUsersAsync();
+
+		public Task<User> Authenticate(string username, string password);
+		
 	}
 }

@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace TrelloClone.Exceptions.ExceptionFactory
 {
-	public static class ExceptionThrower
+	public static class ExceptionFactory
 	{
-        private static int SetStatusCode(Exception ex)
+        public static int SetStatusCode(Exception ex)
         {
             switch (ex)
             {
@@ -27,14 +27,6 @@ namespace TrelloClone.Exceptions.ExceptionFactory
             }
         }
 
-        public static async Task CreateJSONResponse(HttpContext context, Exception ex)
-        {
-            var response = context.Response;
-            response.ContentType = "application/json";
-            response.StatusCode = SetStatusCode(ex);
-            var result = JsonSerializer.Serialize(new { message = ex.Message });
-            await response.WriteAsync(result);
-        }
 
 
 

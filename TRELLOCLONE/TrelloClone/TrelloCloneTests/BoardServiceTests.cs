@@ -6,6 +6,7 @@ using Shouldly;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using TrelloClone.Models;
@@ -85,6 +86,22 @@ namespace TrelloCloneTests
 
 				var assertOnList = await boardService.GetAllAsync();
 				assertOnList.Count.ShouldBe(2);
+			}
+		}
+		[Fact]
+		public async Task BoardService_FindAsync()
+		{
+			Expression<Func<Board, bool>> condition = u => u.Name.Length < 8;
+
+			var board = new Board() { Name = "MyFirstBoard1" };
+			var retList = new List<Board>() { board };
+			using (var mock = AutoMock.GetLoose())
+			{
+				mock.Mock<IBoardRepository>().Setup(x => x.FindAsync(condition)).Returns(Task.FromResult(retList));
+				var boardService = mock.Create<BoardService>();
+
+				var foundBoards = await boardService.FindAsync(condition);
+				foundBoards.ShouldBe(retList);
 			}
 		}
 	}

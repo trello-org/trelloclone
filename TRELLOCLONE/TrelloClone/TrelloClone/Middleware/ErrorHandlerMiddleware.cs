@@ -32,10 +32,22 @@ namespace Application.Middleware
             catch (Exception ex)
             {
                 _logger.LogError(ex.StackTrace);
-                await ExceptionThrower.CreateJSONResponse(context, ex);
+                await CreateJSONResponse(context, ex);
+
+
             }
         }
 
-        
+        public static async Task CreateJSONResponse(HttpContext context, Exception ex)
+        {
+            var response = context.Response;
+            response.ContentType = "application/json";
+            response.StatusCode = ExceptionFactory.SetStatusCode(ex);
+            var result = JsonSerializer.Serialize(new { message = ex.Message });
+            await response.WriteAsync(result);
+        }
+
+
+
     }
 }

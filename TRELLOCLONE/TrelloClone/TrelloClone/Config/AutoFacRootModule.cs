@@ -61,23 +61,30 @@ namespace TrelloClone.Config
             builder.RegisterType<CardRepository>().As<ICardRepository>().InstancePerLifetimeScope();
             builder.RegisterType<CardLabelRepository>().As<ICardLabelRepository>().InstancePerLifetimeScope();*/
 
-            var repoAccess = AppDomain.CurrentDomain.GetAssemblies().Single(x => x.FullName.Contains("Repository"));
+            // var repoAccess = AppDomain.CurrentDomain.GetAssemblies().Single(x => x.FullName.Contains("Repository"));
 
-            builder.RegisterAssemblyTypes(repoAccess)
+            // convention projectName.
+            builder.RegisterAssemblyTypes(Assembly.Load("Repository"))
                    .Where(t => t.Name.EndsWith("Repository"))
-                   .AsImplementedInterfaces();
+                   .AsImplementedInterfaces()
+                   .InstancePerLifetimeScope();
 
-            var serviceAccess = AppDomain.CurrentDomain.GetAssemblies().Single(x => x.FullName.Contains("Application"));
+            builder.RegisterAssemblyTypes(Assembly.Load("Application"))
+                .Where(t => t.Name.EndsWith("Service"))
+                .InstancePerLifetimeScope();
+
+            // builder.Register<UserService>().InstancePer
+           //  var serviceAccess = AppDomain.CurrentDomain.GetAssemblies().Single(x => x.FullName.Contains("Application"));
 
 			/*builder.RegisterAssemblyTypes(serviceAccess)
                    .Where(t => t.Name.EndsWith("Service"))
                    .AsSelf();*/
 
-			builder.RegisterType<UserService>().AsSelf();
+			/*builder.RegisterType<UserService>().AsSelf();
 			builder.RegisterType<BoardService>().AsSelf();
 			builder.RegisterType<CardListService>().AsSelf();
 			builder.RegisterType<CardService>().AsSelf();
-			builder.RegisterType<LabelService>().AsSelf();
+			builder.RegisterType<LabelService>().AsSelf();*/
 
 
 		}

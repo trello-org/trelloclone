@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using TrelloClone.Filters;
 using TrelloClone.Models;
 using Application.Services;
+using TrelloClone.Exceptions;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -61,6 +62,17 @@ namespace TrelloClone.Controllers
 			}
 			_logger.LogInformation($"User successfully fetchedddddd.");
 			return await _userService.GetByIdAsync(id);
+		}
+
+		[HttpPost("login")]
+		public async Task<IActionResult> Login([FromBody] AuthenticateRequest req)
+		{
+			var user = await _userService.Authenticate(req.Username, req.Password);
+			if (user == null) throw new AppException("Invalid credentials");
+			var token = _userService.GenerateJwtToken(user);
+			Console.WriteLine($"{token.Token} {token.expiresOn}");
+			return Ok(token);
+
 		}
 
 		// POST api/users

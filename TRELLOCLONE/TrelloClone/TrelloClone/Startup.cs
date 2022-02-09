@@ -20,6 +20,7 @@ using System.Threading.Tasks;
 using TrelloClone.Config;
 using Application.Services;
 using TrelloClone.Utils;
+using TrelloClone.Middleware;
 
 namespace TrelloClone
 {
@@ -81,6 +82,7 @@ namespace TrelloClone
             app.UseAuthorization();
 
             app.UseMiddleware<ErrorHandlerMiddleware>();
+            app.UseMiddleware<JwtMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {
