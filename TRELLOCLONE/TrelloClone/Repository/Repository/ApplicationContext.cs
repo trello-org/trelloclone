@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Application.Dtos;
+using Domain.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +17,8 @@ namespace Repository
 		public DbSet<CardList> CardLists { get; set; }
 		public DbSet<Card> Cards { get; set; }
 		public DbSet<Label> Labels { get; set; }
+
+		public DbSet<RefreshToken> Tokens { get; set; }
 
 		public ApplicationContext(DbContextOptions options)
 			: base(options)

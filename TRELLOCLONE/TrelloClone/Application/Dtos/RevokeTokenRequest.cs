@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace Application.Dtos
 {
-	public class JwtToken
+	public class RevokeTokenRequest
 	{
+		
 		public string Token { get; set; }
-		public string RefreshToken { get; set; }
+		
 	}
 }

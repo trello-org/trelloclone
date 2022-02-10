@@ -38,9 +38,6 @@ namespace TrelloClone.Config
                 Password = dbPassword
             };
 
-            // builder.RegisterType<LoggerFactory>().As<ILoggerFactory>().SingleInstance();
-            // builder.RegisterGeneric(typeof(Logger<>)).As(typeof(ILogger<>)).SingleInstance();
-
             builder.Register(cs => { return new ConnectionStrings(_configuration); }).AsSelf().SingleInstance();
 
             
@@ -54,15 +51,6 @@ namespace TrelloClone.Config
             }).InstancePerDependency();
 
 
-
-            /*builder.RegisterType<UserRepository>().As<IUserRepository>().InstancePerLifetimeScope();
-            builder.RegisterType<BoardRepository>().As<IBoardRepository>().InstancePerLifetimeScope();
-            builder.RegisterType<CardListRepository>().As<ICardListRepository>().InstancePerLifetimeScope();
-            builder.RegisterType<CardRepository>().As<ICardRepository>().InstancePerLifetimeScope();
-            builder.RegisterType<CardLabelRepository>().As<ICardLabelRepository>().InstancePerLifetimeScope();*/
-
-            // var repoAccess = AppDomain.CurrentDomain.GetAssemblies().Single(x => x.FullName.Contains("Repository"));
-
             // convention projectName.
             builder.RegisterAssemblyTypes(Assembly.Load("Repository"))
                    .Where(t => t.Name.EndsWith("Repository"))
@@ -72,21 +60,6 @@ namespace TrelloClone.Config
             builder.RegisterAssemblyTypes(Assembly.Load("Application"))
                 .Where(t => t.Name.EndsWith("Service"))
                 .InstancePerLifetimeScope();
-
-            // builder.Register<UserService>().InstancePer
-           //  var serviceAccess = AppDomain.CurrentDomain.GetAssemblies().Single(x => x.FullName.Contains("Application"));
-
-			/*builder.RegisterAssemblyTypes(serviceAccess)
-                   .Where(t => t.Name.EndsWith("Service"))
-                   .AsSelf();*/
-
-			/*builder.RegisterType<UserService>().AsSelf();
-			builder.RegisterType<BoardService>().AsSelf();
-			builder.RegisterType<CardListService>().AsSelf();
-			builder.RegisterType<CardService>().AsSelf();
-			builder.RegisterType<LabelService>().AsSelf();*/
-
-
 		}
     }
 }

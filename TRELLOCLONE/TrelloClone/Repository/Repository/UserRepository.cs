@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Domain.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Repository.EntityTypeConfigurations;
 using System;
@@ -140,6 +141,23 @@ namespace Repository.Repository
 			_dbContext.Users.Update(entity);
 			return _dbContext.SaveChangesAsync();
 			
+		}
+
+		public Task<RefreshToken> GetTokenByTokenString(string token)
+		{
+			return _dbContext.Tokens.SingleOrDefaultAsync(t => t.Token == token);
+		}
+
+		public Task UpdateTokenAsync(RefreshToken token)
+		{
+			_dbContext.Tokens.Update(token);
+			return _dbContext.SaveChangesAsync();
+		}
+
+		public async Task AddTokenAsync(RefreshToken token)
+		{
+			await _dbContext.Tokens.AddAsync(token);
+			await _dbContext.SaveChangesAsync();
 		}
 	}
 }
