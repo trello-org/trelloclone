@@ -27,7 +27,7 @@ jobs:
       run: dotnet restore ./TRELLOCLONE/TrelloClone/TrelloClone/TrelloClone.csproj
       
     - name: Build dependencies domain
-      run: dotnet build .TRELLOCLONE/TrelloClone/DomainLayer/Domain.csproj --no-restore
+      run: dotnet build ./TRELLOCLONE/TrelloClone/DomainLayer/Domain.csproj --no-restore
     - name: Build dependencies app
       run: dotnet build ./TRELLOCLONE/TrelloClone/Application/Application.csproj --no-restore
     - name: Build dependencies repository
