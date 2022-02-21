@@ -22,6 +22,9 @@ namespace TrelloClone.Models
         [Column("id")]
         public long Id { get { return _id; } set { _id = value; } }
         [Column("name")]
+        [Required]
+        [StringLength(16, ErrorMessage = "Maximum length is 16, Minimum length is 4.", MinimumLength = 4)]
+        [RegularExpression("[A-Za-z]{4,16}", ErrorMessage = "Only letters allowed")]
         public string Name { get { return _name; } set { _name = value; } }
         [Column("description")]
         public string Description { get { return _description; } set { _description = value; } }

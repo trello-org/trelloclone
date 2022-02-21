@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Repository.EntityTypeConfigurations;
 using Repository.Repository;
 using System;
 using System.Collections.Generic;
@@ -15,12 +16,12 @@ namespace Repository
 	public class CardListRepository : ICardListRepository
 	{
 		private readonly ApplicationContext _dbContext;
-		private readonly string _connectionString;
+		private readonly ConnectionStrings _connectionStrings;
 
-		public CardListRepository(ApplicationContext dbContext)
+		public CardListRepository(ApplicationContext dbContext, ConnectionStrings connectionStrings)
 		{
 			_dbContext = dbContext;
-			_connectionString = Environment.GetEnvironmentVariable("adoString");
+			_connectionStrings = connectionStrings; ;
 		}
 		
 		public async Task AddAsync(CardList entity)

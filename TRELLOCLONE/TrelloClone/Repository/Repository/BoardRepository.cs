@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Repository.EntityTypeConfigurations;
 using Repository.Repository;
 using System;
 using System.Collections.Generic;
@@ -14,12 +15,12 @@ namespace Repository
 	public class BoardRepository : IBoardRepository
 	{
 		private readonly ApplicationContext _dbContext;
-		private readonly string _connectionString;
+		private readonly ConnectionStrings _connectionStrings;
 
-		public BoardRepository(ApplicationContext dbContext)
+		public BoardRepository(ApplicationContext dbContext, ConnectionStrings connectionStrings)
 		{
 			_dbContext = dbContext;
-			_connectionString = Environment.GetEnvironmentVariable("adoString");
+			_connectionStrings = connectionStrings; ;
 		}
 
 		public async Task AddAsync(Board entity)

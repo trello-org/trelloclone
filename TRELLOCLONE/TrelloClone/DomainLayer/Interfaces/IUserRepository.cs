@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,5 +10,14 @@ namespace Repository.Repository
 {
 	public interface IUserRepository : IRepository<User>
 	{
+		Task<User> FindByUsernameAsync(string username);
+		Task<int> CountUsersAsync();
+
+		public Task<User> Authenticate(string username, string password);
+		Task<RefreshToken> GetTokenByTokenString(string token);
+
+		Task UpdateTokenAsync(RefreshToken token);
+
+		Task AddTokenAsync(RefreshToken token);
 	}
 }

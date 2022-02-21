@@ -1,11 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Repository.EntityTypeConfigurations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
-using TrelloClone;
 using TrelloClone.Models;
 
 namespace Repository.Repository
@@ -13,12 +12,12 @@ namespace Repository.Repository
 	public class CardLabelRepository : ICardLabelRepository
 	{
 		private readonly ApplicationContext _dbContext;
-		private readonly string _connectionString;
+		private readonly ConnectionStrings _connectionStrings;
 
-		public CardLabelRepository(ApplicationContext dbContext)
+		public CardLabelRepository(ApplicationContext dbContext, ConnectionStrings connectionStrings)
 		{
 			_dbContext = dbContext;
-			_connectionString = Environment.GetEnvironmentVariable("adoString");
+			_connectionStrings = connectionStrings;
 		}
 
 		public async Task AddAsync(Label entity)

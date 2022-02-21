@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Npgsql;
+using Repository.EntityTypeConfigurations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,12 +16,12 @@ namespace Repository.Repository
 	public class CardRepository : ICardRepository
 	{
 		private readonly ApplicationContext _dbContext;
-		private readonly string _connectionString;
+		private readonly ConnectionStrings _connectionStrings;
 
-		public CardRepository(ApplicationContext dbContext)
+		public CardRepository(ApplicationContext dbContext, ConnectionStrings connectionStrings)
 		{
 			_dbContext = dbContext;
-			_connectionString = Environment.GetEnvironmentVariable("adoString");
+			_connectionStrings = connectionStrings; ;
 		}
 
 		public async Task AddAsync(Card entity)
@@ -31,7 +32,7 @@ namespace Repository.Repository
 
 		public void AssignCard(long cardId, long userId)
 		{
-			using (var connection = new NpgsqlConnection(_connectionString))
+			using (var connection = new NpgsqlConnection(_connectionStrings.ConnectionString))
 			{
 				connection.Open();
 				var cm = new NpgsqlCommand("INSERT INTO public.asignees(user_id, card_id) VALUES(@user_id, @card_id); ", connection);
@@ -84,7 +85,7 @@ namespace Repository.Repository
 
 		public void RemoveAssigneeFromCard(long cardId, long userId)
 		{
-			using (var connection = new NpgsqlConnection(_connectionString))
+			using (var connection = new NpgsqlConnection(_connectionStrings.ConnectionString))
 			{
 				connection.Open();
 				var cm = new NpgsqlCommand("delete from asignees where user_id = @user_id and card_id = @card_id;", connection);

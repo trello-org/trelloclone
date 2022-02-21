@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using TrelloClone.Models;
 
 
-namespace TrelloClone.Services
+namespace Application.Services
 {
 	public class CardService
 	{
