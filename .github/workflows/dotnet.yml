@@ -36,5 +36,5 @@ jobs:
       run: dotnet build ./TRELLOCLONE/TrelloClone/TrelloClone/TrelloClone.csproj --no-restore
       
     - name: Test
-      run: dotnet test --no-build --verbosity detailed
+      run: dotnet test ./TRELLOCLONE/TrelloClone/IntegrationTests/IntegrationTests.csproj --no-build --verbosity detailed
 #./TRELLOCLONE/TrelloClone/IntegrationTests/IntegrationTests.csproj 
