@@ -72,7 +72,7 @@ namespace Application.Services
 			return _userRepository.Authenticate(username, password);
 		}
 
-		public async Task<JwtToken> GenerateJwtToken(User user, string ipAdress)
+		public JwtToken GenerateJwtToken(User user, string ipAdress)
 		{
 			var tokenHandler = new JwtSecurityTokenHandler();
 			var key = Encoding.ASCII.GetBytes("mylittlesecretkeyneedstobelongenough");
@@ -83,15 +83,15 @@ namespace Application.Services
 					new Claim("id", user.Id.ToString()),
 					new Claim(ClaimTypes.Role, user.Role)
 				}),
-				Expires = DateTime.UtcNow.AddDays(7),
+				Expires = DateTime.UtcNow.AddSeconds(15),
 				SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
 			};
 			var token = tokenHandler.CreateToken(tokenDescriptor);
 			var tokenString = tokenHandler.WriteToken(token);
-			var retToken = new JwtToken() { Token = tokenString};
-			var refreshToken = GenerateRefreshToken(ipAdress, user.Id);
-			await _userRepository.AddTokenAsync(refreshToken);
-			retToken.RefreshToken = refreshToken.Token;
+			var retToken = new JwtToken() { Token = tokenString };
+			//var refreshToken = GenerateRefreshToken(ipAdress, user.Id);
+			//await _userRepository.AddTokenAsync(refreshToken);
+			//retToken.RefreshToken = refreshToken.Token;
 			return retToken;
 		}
 
@@ -99,6 +99,10 @@ namespace Application.Services
 		{
 			//var user = _context.Users.SingleOrDefault(u => u.RefreshTokens.Any(t => t.Token == token));
 			var refreshToken = await _userRepository.GetTokenByTokenString(token);
+			if (refreshToken == null)
+				Console.WriteLine("Refresh token is null");
+			else
+				Console.WriteLine("Refresh token is not null");
 			var user = await _userRepository.GetByIdAsync(refreshToken.UserId);
 			// return null if no user found with token
 			if (user == null) return null;
@@ -117,8 +121,9 @@ namespace Application.Services
 			await _userRepository.UpdateTokenAsync(refreshToken);
 
 			// generate new jwt
-			var jwtToken = await GenerateJwtToken(user, ipAddress);
+			var jwtToken = GenerateJwtToken(user, ipAddress);
 			jwtToken.RefreshToken = newRefreshToken.Token;
+			await _userRepository.AddTokenAsync(newRefreshToken);
 
 			return jwtToken;
 		}
@@ -146,13 +151,13 @@ namespace Application.Services
 			return true;
 		}
 
-		private RefreshToken GenerateRefreshToken(string ipAddress, long userId)
+		public RefreshToken GenerateRefreshToken(string ipAddress, long userId)
 		{
 			using (var rngCryptoServiceProvider = new RNGCryptoServiceProvider())
 			{
 				var randomBytes = new byte[64];
 				rngCryptoServiceProvider.GetBytes(randomBytes);
-				return new RefreshToken
+				var ret = new RefreshToken
 				{
 					Token = Convert.ToBase64String(randomBytes),
 					Expires = DateTime.UtcNow.AddDays(7),
@@ -160,7 +165,12 @@ namespace Application.Services
 					CreatedByIp = ipAddress,
 					UserId = userId
 				};
+				return ret;
 			}
+		}
+		public async Task SaveRefreshTokenAsync(RefreshToken token)
+		{
+			await _userRepository.AddTokenAsync(token);
 		}
 	}
 }

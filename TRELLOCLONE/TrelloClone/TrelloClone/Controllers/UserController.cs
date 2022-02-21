@@ -15,6 +15,7 @@ using Domain.Constants;
 using TrelloClone.Security;
 using Microsoft.AspNetCore.Http;
 using Application.Dtos;
+using System.Net.Http;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -32,6 +33,14 @@ namespace TrelloClone.Controllers
 		{
 			_userService = userService;
 			_logger = logger;
+		}
+
+		[HttpGet("username/{username}")]
+		public async Task<IActionResult> GetUserByUsername(string username)
+		{
+			var user = await _userService.FindByUsernameAsync(username);
+			Console.WriteLine("is User null? " + user == null);
+			return user == null ? NotFound() : Ok(user);
 		}
 
 		// GET: api/users
@@ -58,27 +67,33 @@ namespace TrelloClone.Controllers
 		// GET api/users/5
 		[HttpGet("{id}")]
 		[TypeFilter(typeof(LogAttribute))]
-		public async Task<User> GetUserByIdAsync(long id)
+		public async Task<IActionResult> GetUserByIdAsync(long id)
 		{
 			_logger.LogInformation($"Fetching user with ID {id}");
 			var user = await _userService.GetByIdAsync(id);
 			if (user == null)
 			{
 				_logger.LogInformation($"Could not find user with ID {id}");
-				return user;
+				return NotFound(user);
 			}
 			_logger.LogInformation($"User successfully fetchedddddd.");
-			return await _userService.GetByIdAsync(id);
+			return Ok(user);
 		}
 
 		[HttpPost("login")]
 		public async Task<IActionResult> Login([FromBody] AuthenticateRequest req)
 		{
-			var user = await _userService.Authenticate(req.Username, req.Password);
+			//var client = _httpClientFactory.Create();
+
+				var user = await _userService.Authenticate(req.Username, req.Password);
 			if (user == null) throw new AppException("Invalid credentials");
-			var token = await _userService.GenerateJwtToken(user, IpAddress());
+			var token = _userService.GenerateJwtToken(user, IpAddress());
+			var refreshToken = _userService.GenerateRefreshToken(IpAddress(), user.Id);
+			await _userService.SaveRefreshTokenAsync(refreshToken);
+			token.RefreshToken = refreshToken.Token;
 			//Console.WriteLine($"{token.Token} {token.expiresOn}");
 			SetTokenCookie(token.RefreshToken);
+			Console.WriteLine("Refresh token is " + token.RefreshToken);
 			return Ok(token);
 
 		}
@@ -115,13 +130,20 @@ namespace TrelloClone.Controllers
 		public async Task<IActionResult> RefreshToken()
 		{
 			var refreshToken = Request.Cookies["refreshToken"];
+			Console.WriteLine($"Refresh token in user controller {refreshToken}");
+			foreach (var header in Request.Headers) Console.WriteLine(header.Value + " // " + header.Key);
+			Console.WriteLine("");
+			//foreach (var header in Request.Cookies) Console.WriteLine(header);
+			
+			Console.WriteLine("@@@@@@@@@@@@@@@");
+
 			var response = await _userService.RefreshToken(refreshToken, IpAddress());
 
 			if (response == null)
 				return Unauthorized(new { message = "Invalid token" });
 
 			SetTokenCookie(response.RefreshToken);
-
+			Console.WriteLine("Cookie is " + response.RefreshToken);
 			return Ok(response);
 		}
 

@@ -43,13 +43,13 @@ namespace TrelloClone.Config
             
             builder.RegisterType<ConnectionSettings>().AsSelf().InstancePerLifetimeScope();
            
-            builder.Register(x =>
+            /*builder.Register(x =>
             {
                 var optionsBuilder = new DbContextOptionsBuilder<ApplicationContext>();
                 optionsBuilder.UseNpgsql(bd.ConnectionString);
                 return new ApplicationContext(optionsBuilder.Options);
             }).InstancePerDependency();
-
+*/
 
             // convention projectName.
             builder.RegisterAssemblyTypes(Assembly.Load("Repository"))

@@ -23,9 +23,9 @@ namespace Repository.EntityTypeConfigurations
 			builder.Property(en => en.Expires).HasColumnName("expires").IsRequired();
 			builder.Property(en => en.Created).HasColumnName("created").IsRequired();
 			builder.Property(en => en.CreatedByIp).HasColumnName("created_ip").IsRequired();
-			builder.Property(en => en.Revoked).HasColumnName("revoked").IsRequired();
-			builder.Property(en => en.RevokedByIp).HasColumnName("revoked_ip").IsRequired();
-			builder.Property(en => en.ReplacedByToken).HasColumnName("replaced_by").IsRequired();
+			builder.Property(en => en.Revoked).HasColumnName("revoked");
+			builder.Property(en => en.RevokedByIp).HasColumnName("revoked_ip");
+			builder.Property(en => en.ReplacedByToken).HasColumnName("replaced_by");
 			builder.Property(en => en.UserId).HasColumnName("user_id").IsRequired();
 		}
 	}

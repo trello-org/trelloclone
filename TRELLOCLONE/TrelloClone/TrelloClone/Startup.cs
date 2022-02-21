@@ -24,6 +24,7 @@ using TrelloClone.Middleware;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Application.Http;
 
 namespace TrelloClone
 {
@@ -45,8 +46,46 @@ namespace TrelloClone
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "TrelloClone", Version = "v1" });
             });
-            services.AddMemoryCache();
 
+            /*builder.Register(x =>
+            {
+                var optionsBuilder = new DbContextOptionsBuilder<ApplicationContext>();
+                optionsBuilder.UseNpgsql(bd.ConnectionString);
+                return new ApplicationContext(optionsBuilder.Options);
+            }).InstancePerDependency();
+
+             var connectionString = _configuration["PostgreSql:ConnectionString"];
+            var dbPassword = _configuration["PostgreSql:DbPassword"];
+
+            var bd = new NpgsqlConnectionStringBuilder(connectionString)
+            {
+                Password = dbPassword
+            };
+            */
+
+            var connectionString = Configuration["PostgreSql:ConnectionStringTest"];
+            var dbPassword = Configuration["PostgreSql:DbPassword"];
+
+            var bd = new NpgsqlConnectionStringBuilder(connectionString)
+            {
+                Password = dbPassword
+            };
+
+            services.AddDbContext<ApplicationContext>(options =>
+            {
+                options.UseNpgsql(bd.ConnectionString);
+            });
+
+            services.AddMemoryCache();
+            //services.AddHttpClient();
+            /* services.AddHttpClient("TokenClient", config =>
+             {
+                 config.BaseAddress = new Uri("https://localhost:6177/api/");
+                 config.Timeout = new TimeSpan(0, 0, 30);
+                 config.DefaultRequestHeaders.Clear();
+             });*/
+            services.AddHttpClient<TokenClient>();
+            services.AddScoped<IHttpClientServiceImplementation, HttpClientFactoryService>();
             var key = Encoding.ASCII.GetBytes("mylittlesecretkeyneedstobelongenough");
             services.AddAuthentication(x =>
             {
@@ -65,28 +104,7 @@ namespace TrelloClone
                     ValidateAudience = false
                 };
             });
-            /*
-        
-            var connectionString = Configuration["PostgreSql:ConnectionString"];
-            var dbPassword = Configuration["PostgreSql:DbPassword"];
-           
-            var builder = new NpgsqlConnectionStringBuilder(connectionString)
-            {
-                Password = dbPassword
-            };
-            services.AddDbContext<ApplicationContext>(options => options.UseNpgsql(builder.ConnectionString));
-
-            services.AddSingleton(_ => Configuration["PostgreSql:ConnectionStringAdo"]);
-            services.AddTransient<IUserRepository, UserRepository>();
-            services.AddTransient<IBoardRepository, BoardRepository>();
-            services.AddTransient<ICardListRepository, CardListRepository>();
-            services.AddTransient<ICardRepository, CardRepository>();
-            services.AddTransient<ICardLabelRepository, CardLabelRepository>();
-            services.AddScoped<UserService>();
-            services.AddScoped<BoardService>();
-            services.AddScoped<CardListService>();
-            services.AddScoped<CardService>();
-            services.AddScoped<LabelService>();*/
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

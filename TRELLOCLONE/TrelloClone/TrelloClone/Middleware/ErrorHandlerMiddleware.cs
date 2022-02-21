@@ -32,6 +32,7 @@ namespace Application.Middleware
             catch (Exception ex)
             {
                 _logger.LogError(ex.StackTrace);
+                _logger.LogError(">>>>>>>>>>>>>>>" + ex.Message);
                 await CreateJSONResponse(context, ex);
 
 

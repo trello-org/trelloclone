@@ -64,4 +64,6 @@ namespace TrelloClone
                 })
                 .UseNLog();  // NLog: Setup NLog for Dependency injection;
     }
+
+   // public partial class Program { }
 }

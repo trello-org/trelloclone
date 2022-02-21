@@ -65,7 +65,12 @@ namespace Repository.Repository
 
 		public Task<User> FindByUsernameAsync(string username)
 		{
-			return _dbContext.Users.SingleOrDefaultAsync(u => u.Username.Equals(username));
+			Console.WriteLine(username);
+			foreach(var u in _dbContext.Users)
+			{
+				Console.WriteLine(u.Username);
+			}
+			return _dbContext.Users.SingleOrDefaultAsync(u => u.Username == username);
 		}
 
 		public Task<List<User>> GetAllAsync()
