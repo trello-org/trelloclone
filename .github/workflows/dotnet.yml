@@ -18,7 +18,7 @@ jobs:
       with:
         dotnet-version: 5.0.x
     - name: Restore dependencies domain
-      run: dotnet restore .TRELLOCLONE/TrelloClone/DomainLayer/Domain.csproj
+      run: dotnet restore ./TRELLOCLONE/TrelloClone/DomainLayer/Domain.csproj
     - name: Restore dependencies app
       run: dotnet restore ./TRELLOCLONE/TrelloClone/Application/Application.csproj
     - name: Restore dependencies repository
