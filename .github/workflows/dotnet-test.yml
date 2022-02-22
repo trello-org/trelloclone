@@ -1,0 +1,19 @@
+name: .NET Test
+
+on:
+  push:
+    branches: [ develop ]
+  pull_request:
+    branches: [ develop ]
+
+jobs:
+  job1:
+    call-workflow-2-in-local-repo:
+        uses: ./.github/workflows/dotnet.yml
+  job2:
+    needs: job1
+    runs-on: ubuntu-latest
+    steps:  
+       - name: Test
+         run: dotnet test ./TRELLOCLONE/TrelloClone/IntegrationTests/IntegrationTests.csproj --no-build --verbosity detailed
+  
