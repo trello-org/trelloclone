@@ -26,6 +26,6 @@ jobs:
     - name: Unit tests
       run: dotnet test ./TRELLOCLONE/TrelloClone/TrelloCloneTests/TrelloCloneTests.csproj --no-build --verbosity minimal
     #- uses: ./.github/workflows/dotnet-test.yml
-#    - name: Test
-#      run: dotnet test ./TRELLOCLONE/TrelloClone/IntegrationTests/IntegrationTests.csproj --no-build --verbosity detailed
+    - name: Test
+      run: dotnet test ./TRELLOCLONE/TrelloClone/IntegrationTests/IntegrationTests.csproj --no-build --verbosity detailed
 #./TRELLOCLONE/TrelloClone/IntegrationTests/IntegrationTests.csproj 
