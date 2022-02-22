@@ -1,18 +1,17 @@
 name: .NET Test
 
+#on:
+ # push:
+  #  branches: [ develop ]
+  #pull_request:
+  #  branches: [ develop ]
+  
 on:
-  push:
-    branches: [ develop ]
-  pull_request:
-    branches: [ develop ]
+   workflow_call:
 
 jobs:
   job1:
-    uses: ./.github/workflows/dotnet.yml
-
-  job2:
     runs-on: ubuntu-latest
-    needs: job1
     steps:
       - name: Test
         run: dotnet test ./TRELLOCLONE/TrelloClone/IntegrationTests/IntegrationTests.csproj --no-build --verbosity detailed
