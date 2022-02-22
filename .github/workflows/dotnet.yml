@@ -17,9 +17,12 @@ jobs:
       with:
         dotnet-version: 5.0.x
         
-    - name: build dependencies
+    - name: restore dependencies
       run: dotnet restore ./TRELLOCLONE/TrelloClone/**/*.csproj
        
+    - name: build dependencies
+      run: dotnet build ./TRELLOCLONE/TrelloClone/**/*.csproj
+      
     - name: Unit tests
       run: dotnet test ./TRELLOCLONE/TrelloClone/TrelloCloneTests/TrelloCloneTests.csproj --no-build --verbosity minimal
     #- uses: ./.github/workflows/dotnet-test.yml
