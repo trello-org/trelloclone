@@ -14,3 +14,5 @@ jobs:
     needs: job1
     steps:
       - run: dotnet test ./TRELLOCLONE/TrelloClone/IntegrationTests/IntegrationTests.csproj --no-build --verbosity detailed
+      - name: Unit tests
+        run: dotnet test ./TRELLOCLONE/TrelloClone/TrelloCloneTests/TrelloCloneTests.csproj --no-build --verbosity minimal
