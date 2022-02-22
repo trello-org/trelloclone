@@ -9,10 +9,11 @@ on:
 jobs:
   job1:
     uses: ./.github/workflows/dotnet.yml
+
   job2:
     needs: job1
     runs-on: ubuntu-latest
-    steps:  
-       - name: Test
-         run: dotnet test ./TRELLOCLONE/TrelloClone/IntegrationTests/IntegrationTests.csproj --no-build --verbosity detailed
+    steps:
+      - name: Test
+        run: dotnet test ./TRELLOCLONE/TrelloClone/IntegrationTests/IntegrationTests.csproj --no-build --verbosity detailed
   
