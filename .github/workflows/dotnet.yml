@@ -1,11 +1,11 @@
 name: .NET
 
 on:
-  # workflow_call:
-  push:
-    branches: [ develop ]
-  pull_request:
-    branches: [ develop ]
+  workflow_call:
+  #push:
+    #branches: [ develop ]
+  #pull_request:
+    #branches: [ develop ]
 
 jobs:
   build:
@@ -35,7 +35,7 @@ jobs:
       run: dotnet build ./TRELLOCLONE/TrelloClone/Repository/Repository.csproj --no-restore
     - name: Build dependencies main app
       run: dotnet build ./TRELLOCLONE/TrelloClone/TrelloClone/TrelloClone.csproj --no-restore
-    - uses: ./.github/workflows/dotnet-test.yml
+    #- uses: ./.github/workflows/dotnet-test.yml
 #    - name: Test
 #      run: dotnet test ./TRELLOCLONE/TrelloClone/IntegrationTests/IntegrationTests.csproj --no-build --verbosity detailed
 #./TRELLOCLONE/TrelloClone/IntegrationTests/IntegrationTests.csproj 
