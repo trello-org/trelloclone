@@ -38,12 +38,12 @@ namespace TrelloClone.Controllers
 
 		// GET api/boards/5
 		[HttpGet("{id}")]
-		public async Task<Board> GetAsync(long id)
+		public async Task<IActionResult> GetAsync(long id)
 		{
 			_logger.LogInformation($"Fetching board with id {id}");
 			var board = await _boardService.GetByIdAsync(id);
 			_logger.LogInformation("Successfully fetched board.");
-			return board;
+			return board == null ? NotFound() : Ok(board);
 		}
 
 		

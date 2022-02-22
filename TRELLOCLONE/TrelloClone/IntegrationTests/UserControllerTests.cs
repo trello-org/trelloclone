@@ -22,31 +22,14 @@ namespace IntegrationTests
 		[Fact]
 		public async Task Get_existing_user_by_id_returns_200()
 		{
-			// Add User
-			var user = new User()
-			{
-				Username = "TestUser1",
-				Password = "TestPassword1",
-				Role = "USER"
-			};
-			await Add_user_should_return_200(user);
-
-			// Find User
-			var found = await Find_user_by_username_should_return_200(user.Username);
-
-			var response = await _client.GetAsync("/api/users/" + found.Id);
+			var response = await _client.GetAsync("/api/users/4");
 
 			response.EnsureSuccessStatusCode();
 
 			var responseString = await response.Content.ReadAsStringAsync();
 			var foundById = JsonConvert.DeserializeObject<User>(responseString);
 			Console.WriteLine(responseString);
-			foundById.Id.ShouldBe(found.Id);
-
-			// Delete User
-
-			await Remove_user_by_id_should_return_200(found.Id);
-		
+			foundById.Id.ShouldBe(4);
 		}
 
 		[Fact]
@@ -70,7 +53,7 @@ namespace IntegrationTests
 		}
 
 		[Fact]
-		public async Task Add_user_and_then_remove_them()
+		public async Task Add_user_returns_200()
 		{
 			// Add User
 			var user = new User()
@@ -79,44 +62,6 @@ namespace IntegrationTests
 				Password = "TestPassword1",
 				Role = "USER"
 			};
-			await Add_user_should_return_200(user);
-
-			// Find User
-			var found = await Find_user_by_username_should_return_200(user.Username);
-
-			// Delete User
-
-			await Remove_user_by_id_should_return_200(found.Id);
-		}
-
-		[Fact]
-		public async Task Add_user_modify_them_and_then_remove_them()
-		{
-			// Add User
-			var user = new User()
-			{
-				Username = "TestUser1",
-				Password = "TestPassword1",
-				Role = "USER"
-			};
-			await Add_user_should_return_200(user);
-
-			// Find User 
-
-			var found = await Find_user_by_username_should_return_200(user.Username);
-
-			found.Username = "NewTestUsername1";
-			await Modify_user_should_return_200(found);
-
-			var foundAfterModification = await Find_user_by_username_should_return_200(found.Username);
-
-			foundAfterModification.Username.ShouldNotBe(user.Username);
-
-			await Remove_user_by_id_should_return_200(foundAfterModification.Id);
-		}
-
-		internal async Task Add_user_should_return_200(User user)
-		{
 			// Add User
 			var requestJson = JsonConvert.SerializeObject(user);
 			var request = new HttpRequestMessage(HttpMethod.Post, "/api/users");
@@ -127,8 +72,17 @@ namespace IntegrationTests
 			responsePost.StatusCode.ShouldBe(HttpStatusCode.OK);
 		}
 
-		internal async Task Modify_user_should_return_200(User user)
+		[Fact]
+		public async Task Modify_user_returns_200()
 		{
+			// Add User
+			var user = new User()
+			{
+				Id = 4,
+				Username = "TestUser1",
+				Password = "TestPassword1",
+				Role = "USER"
+			};
 			// Add User
 			var requestJson = JsonConvert.SerializeObject(user);
 			var request = new HttpRequestMessage(HttpMethod.Put, "/api/users");
@@ -139,22 +93,25 @@ namespace IntegrationTests
 			responsePost.StatusCode.ShouldBe(HttpStatusCode.OK);
 		}
 
-		public async Task<User> Find_user_by_username_should_return_200(string username)
+		[Fact]
+		public async Task Find_user_by_username_returns_200()
 		{
 			// Find User
-			var responseGet = await _client.GetAsync("/api/users/username/" + username);
+			var responseGet = await _client.GetAsync("/api/users/username/" + "MySpecialUsername1");
 			//responseGet.EnsureSuccessStatusCode();
 			responseGet.StatusCode.ShouldBe(HttpStatusCode.OK);
 			var responseGetString = await responseGet.Content.ReadAsStringAsync();
 			var userFromGetResponse = JsonConvert.DeserializeObject<User>(responseGetString);
-			return userFromGetResponse;
+			userFromGetResponse.Username.ShouldBe("MySpecialUsername1");
 		}
 
-		internal async Task Remove_user_by_id_should_return_200(long id) {
-			// Delete User
-			var responseDelete = await _client.DeleteAsync("/api/users/" + id);
-			//responseDelete.EnsureSuccessStatusCode();
+		[Fact]
+		public async Task Remove_user_by_id_returns_200()
+		{
+			var responseDelete = await _client.DeleteAsync("/api/users/" + 4);
+			responseDelete.EnsureSuccessStatusCode();
 			responseDelete.StatusCode.ShouldBe(HttpStatusCode.OK);
 		}
+
 	}
 }
