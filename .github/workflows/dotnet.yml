@@ -1,15 +1,13 @@
 name: .NET
 
 on:
-  workflow_call:
-  #push:
-    #branches: [ develop ]
-  #pull_request:
-    #branches: [ develop ]
+  push:
+    branches: [ develop ]
+  pull_request:
+    branches: [ develop ]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -18,24 +16,10 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 5.0.x
-    - name: Restore dependencies domain
-      run: dotnet restore ./TRELLOCLONE/TrelloClone/DomainLayer/Domain.csproj
-    - name: Restore dependencies app
-      run: dotnet restore ./TRELLOCLONE/TrelloClone/Application/Application.csproj
-    - name: Restore dependencies repository
-      run: dotnet restore ./TRELLOCLONE/TrelloClone/Repository/Repository.csproj
-    - name: Restore dependencies main app
-      run: dotnet restore ./TRELLOCLONE/TrelloClone/TrelloClone/TrelloClone.csproj
-      
-    - name: Build dependencies domain
-      run: dotnet build ./TRELLOCLONE/TrelloClone/DomainLayer/Domain.csproj --no-restore
-    - name: Build dependencies app
-      run: dotnet build ./TRELLOCLONE/TrelloClone/Application/Application.csproj --no-restore
-    - name: Build dependencies repository
-      run: dotnet build ./TRELLOCLONE/TrelloClone/Repository/Repository.csproj --no-restore
-    - name: Build dependencies main app
-      run: dotnet build ./TRELLOCLONE/TrelloClone/TrelloClone/TrelloClone.csproj --no-restore
-      
+        
+    - name: build dependencies 
+      run: dotnet restore **.csproj
+       
     - name: Unit tests
       run: dotnet test ./TRELLOCLONE/TrelloClone/TrelloCloneTests/TrelloCloneTests.csproj --no-build --verbosity minimal
     #- uses: ./.github/workflows/dotnet-test.yml
