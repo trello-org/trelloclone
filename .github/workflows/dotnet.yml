@@ -18,10 +18,10 @@ jobs:
         dotnet-version: 5.0.x
         
     - name: restore dependencies
-      run: dotnet restore ./TRELLOCLONE/TrelloClone/**/*.csproj
+      run: dotnet restore ./TRELLOCLONE/TrelloClone
        
     - name: build dependencies
-      run: dotnet build ./TRELLOCLONE/TrelloClone/**/*.csproj
+      run: dotnet build ./TRELLOCLONE/TrelloClone
       
     - name: Unit tests
       run: dotnet test ./TRELLOCLONE/TrelloClone/TrelloCloneTests/TrelloCloneTests.csproj --no-build --verbosity minimal
