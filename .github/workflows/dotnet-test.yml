@@ -8,8 +8,7 @@ on:
 
 jobs:
   job1:
-    call-workflow-2-in-local-repo:
-        uses: ./.github/workflows/dotnet.yml
+    uses: ./.github/workflows/dotnet.yml
   job2:
     needs: job1
     runs-on: ubuntu-latest
