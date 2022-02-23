@@ -22,14 +22,14 @@ namespace IntegrationTests
 		[Fact]
 		public async Task Get_existing_board_by_id_returns_200()
 		{
-			var response = await _client.GetAsync("/api/boards/1");
+			var response = await _client.GetAsync("/api/boards/2221");
 
 			response.EnsureSuccessStatusCode();
 
 			var responseString = await response.Content.ReadAsStringAsync();
 			var foundById = JsonConvert.DeserializeObject<Board>(responseString);
 			Console.WriteLine(responseString);
-			foundById.Id.ShouldBe(1);
+			foundById.Id.ShouldBe(1111);
 		}
 
 		[Fact]
@@ -52,7 +52,7 @@ namespace IntegrationTests
 				Name = "MyNewestBoard",
 				Description = "MyNewestDescription1",
 				IsPublic = true,
-				UserId = 4
+				UserId = 1114
 			};
 			// Add Board
 			var requestJson = JsonConvert.SerializeObject(board);
@@ -70,11 +70,11 @@ namespace IntegrationTests
 			// Add Board
 			var board = new Board()
 			{
-				Id = 1,
+				Id = 2221,
 				Name = "MyNewestBoard",
 				Description = "MyNewestDescription1",
 				IsPublic = true,
-				UserId = 4
+				UserId = 1114
 			};
 			// Add Board
 			var requestJson = JsonConvert.SerializeObject(board);
@@ -96,7 +96,7 @@ namespace IntegrationTests
 				Name = "MyNewestBoard",
 				Description = "MyNewestDescription1",
 				IsPublic = true,
-				UserId = 4
+				UserId = 5
 			};
 			// Add Board
 			var requestJson = JsonConvert.SerializeObject(board);
@@ -112,7 +112,7 @@ namespace IntegrationTests
 		[Fact]
 		public async Task Remove_board_by_id_returns_200()
 		{
-			var responseDelete = await _client.DeleteAsync("/api/boards/" + 1);
+			var responseDelete = await _client.DeleteAsync("/api/boards/2222");
 			responseDelete.EnsureSuccessStatusCode();
 			responseDelete.StatusCode.ShouldBe(HttpStatusCode.OK);
 		}
@@ -120,7 +120,7 @@ namespace IntegrationTests
 		[Fact]
 		public async Task Get_all_boards_for_user_returns_200()
 		{
-			var response = await _client.GetAsync("/api/boards/users/4");
+			var response = await _client.GetAsync("/api/boards/users/1114");
 
 			response.EnsureSuccessStatusCode();
 
