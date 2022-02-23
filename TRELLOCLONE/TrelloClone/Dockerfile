@@ -5,12 +5,7 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /src
-COPY ["./TrelloClone/TrelloClone.csproj",
-      "./DomainLayer/Domain.csproj",
-      "./Repository/Repository.csproj",
-      "./Application/Application.csproj",
-      "./TrelloCloneTests/TrelloCloneTests.csproj",
-      "ProjectFolder/"]
+COPY "./TrelloClone/TrelloClone.csproj" "./DomainLayer/Domain.csproj" "./Repository/Repository.csproj" "./Application/Application.csproj" "./TrelloCloneTests/TrelloCloneTests.csproj" "ProjectFolder/"
 RUN dotnet restore "./*/*.csproj"
 COPY . .
 WORKDIR "/src/ProjectFolder"
