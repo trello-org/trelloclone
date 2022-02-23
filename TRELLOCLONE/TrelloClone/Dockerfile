@@ -1,13 +1,14 @@
 FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS base
-WORKDIR ./TrelloClone
+WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
-COPY ./TrelloClone.csproj ProjectFolder/
+WORKDIR /src
+COPY [TrelloClone/TrelloClone.csproj", "TrelloClone/"]
 RUN dotnet restore "./*/*.csproj"
 COPY . .
-WORKDIR "/src/ProjectFolder"
+WORKDIR "/src/TrelloClone"
 RUN dotnet build -c Release -o /app/build
 
 FROM build AS publish
