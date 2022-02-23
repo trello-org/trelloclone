@@ -30,13 +30,16 @@ namespace TrelloClone
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
+            InjectedEnvironment = env;
         }
 
         public IConfiguration Configuration { get; }
         public ILifetimeScope AutofacContainer { get; private set; }
+
+        public IWebHostEnvironment InjectedEnvironment { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -63,18 +66,44 @@ namespace TrelloClone
             };
             */
 
-            var connectionString = Configuration["PostgreSql:ConnectionStringTest"];
-            var dbPassword = Configuration["PostgreSql:DbPassword"];
+            if (InjectedEnvironment.IsDevelopment())
+			{
+                var connectionString = Configuration["PostgreSql:ConnectionStringTest"];
+                var dbPassword = Configuration["PostgreSql:DbPassword"];
 
-            var bd = new NpgsqlConnectionStringBuilder(connectionString)
-            {
-                Password = dbPassword
-            };
+                var bd = new NpgsqlConnectionStringBuilder(connectionString)
+                {
+                    Password = dbPassword
+                };
 
-            services.AddDbContext<ApplicationContext>(options =>
-            {
-                options.UseNpgsql(bd.ConnectionString);
-            });
+                services.AddDbContext<ApplicationContext>(options =>
+                {
+                    options.UseNpgsql(bd.ConnectionString);
+                });
+            }
+            else
+			{
+                // Use connection string provided at runtime by Heroku.
+                var connectionUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+
+                connectionUrl = connectionUrl.Replace("postgres://", string.Empty);
+                var userPassSide = connectionUrl.Split("@")[0];
+                var hostSide = connectionUrl.Split("@")[1];
+
+                var user = userPassSide.Split(":")[0];
+                var password = userPassSide.Split(":")[1];
+                var host = hostSide.Split("/")[0];
+                var database = hostSide.Split("/")[1].Split("?")[0];
+
+               var defaultConnectionString = $"Host={host};Database={database};Username={user};Password={password};SSL Mode=Require;Trust Server Certificate=true";
+
+                var bd = new NpgsqlConnectionStringBuilder(defaultConnectionString);
+
+                services.AddDbContext<ApplicationContext>(options =>
+                {
+                    options.UseNpgsql(bd.ConnectionString);
+                });
+            }
 
             services.AddMemoryCache();
             //services.AddHttpClient();

@@ -64,23 +64,41 @@ namespace IntegrationTests
                     appContext.Database.EnsureCreated();
                     appContext.Users.Add(new User()
                     {
-                        Id = 4,
+                        Id = 1114,
                         Username = "MySpecialUsername1",
                         Password = "MySpecialPassword1"
                     });
                     appContext.Users.Add(new User()
                     {
-                        Id = 5,
+                        Id = 1115,
                         Username = "MySpecialUsername2",
                         Password = "MySpecialPassword2"
                     });
+
+                    appContext.Users.Add(new User()
+                    {
+                        Id = 1116,
+                        Username = "MySpecialUsername3",
+                        Password = "MySpecialPassword3"
+                    });
+
+
                     appContext.Boards.Add(new Board()
                     {
-                        Id = 1,
+                        Id = 2221,
                         Name = "MyNewboard",
                         Description = "My new board.",
                         IsPublic = true,
-                        UserId = 4
+                        UserId = 1116
+                    });
+
+                    appContext.Boards.Add(new Board()
+                    {
+                        Id = 2222,
+                        Name = "MyNewboardyy",
+                        Description = "My new boardyy",
+                        IsPublic = true,
+                        UserId = 1117
                     });
 
                     appContext.SaveChanges();

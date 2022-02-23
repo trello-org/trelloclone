@@ -22,14 +22,14 @@ namespace IntegrationTests
 		[Fact]
 		public async Task Get_existing_user_by_id_returns_200()
 		{
-			var response = await _client.GetAsync("/api/users/4");
+			var response = await _client.GetAsync("/api/users/1114");
 
 			response.EnsureSuccessStatusCode();
 
 			var responseString = await response.Content.ReadAsStringAsync();
 			var foundById = JsonConvert.DeserializeObject<User>(responseString);
 			Console.WriteLine(responseString);
-			foundById.Id.ShouldBe(4);
+			foundById.Id.ShouldBe(1114);
 		}
 
 		[Fact]
@@ -78,7 +78,7 @@ namespace IntegrationTests
 			// Add User
 			var user = new User()
 			{
-				Id = 4,
+				Id = 1114,
 				Username = "TestUser1",
 				Password = "TestPassword1",
 				Role = "USER"
@@ -97,18 +97,18 @@ namespace IntegrationTests
 		public async Task Find_user_by_username_returns_200()
 		{
 			// Find User
-			var responseGet = await _client.GetAsync("/api/users/username/" + "MySpecialUsername1");
+			var responseGet = await _client.GetAsync("/api/users/username/MySpecialUsername3");
 			//responseGet.EnsureSuccessStatusCode();
 			responseGet.StatusCode.ShouldBe(HttpStatusCode.OK);
 			var responseGetString = await responseGet.Content.ReadAsStringAsync();
 			var userFromGetResponse = JsonConvert.DeserializeObject<User>(responseGetString);
-			userFromGetResponse.Username.ShouldBe("MySpecialUsername1");
+			userFromGetResponse.Username.ShouldBe("MySpecialUsername3");
 		}
 
 		[Fact]
 		public async Task Remove_user_by_id_returns_200()
 		{
-			var responseDelete = await _client.DeleteAsync("/api/users/" + 4);
+			var responseDelete = await _client.DeleteAsync("/api/users/" + 1115);
 			responseDelete.EnsureSuccessStatusCode();
 			responseDelete.StatusCode.ShouldBe(HttpStatusCode.OK);
 		}
