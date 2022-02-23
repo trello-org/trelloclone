@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,8 @@ namespace TrelloClone.Exceptions.ExceptionFactory
                 case KeyNotFoundException e:
                     // not found error
                     return (int)HttpStatusCode.NotFound;
+                case DbUpdateConcurrencyException e:
+                    return (int)HttpStatusCode.BadRequest;
                 default:
                     // unhandled error
                     return (int)HttpStatusCode.InternalServerError;

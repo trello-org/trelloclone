@@ -44,7 +44,7 @@ namespace Application.Middleware
             var response = context.Response;
             response.ContentType = "application/json";
             response.StatusCode = ExceptionFactory.SetStatusCode(ex);
-            var result = JsonSerializer.Serialize(new { message = ex.Message });
+            var result = JsonSerializer.Serialize(new { message = ex.Message, exceptionName = ex.GetType().Name });
             await response.WriteAsync(result);
         }
 
