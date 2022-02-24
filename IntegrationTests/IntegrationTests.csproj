@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TrelloClone\TrelloClone.csproj" />
+    <ProjectReference Include="..\TrelloClone\TrelloClone.API.csproj" />
   </ItemGroup>
 
 </Project>
