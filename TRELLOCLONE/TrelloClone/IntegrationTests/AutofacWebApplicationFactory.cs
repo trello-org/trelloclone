@@ -63,21 +63,18 @@ namespace IntegrationTests
                 {
                     appContext.Database.EnsureCreated();
                     appContext.Users.Add(new User()
-                    {
-                        Id = 1114,
+                    {                
                         Username = "MySpecialUsername1",
                         Password = "MySpecialPassword1"
                     });
                     appContext.Users.Add(new User()
                     {
-                        Id = 1115,
                         Username = "MySpecialUsername2",
                         Password = "MySpecialPassword2"
                     });
 
                     appContext.Users.Add(new User()
                     {
-                        Id = 1116,
                         Username = "MySpecialUsername3",
                         Password = "MySpecialPassword3"
                     });
@@ -85,7 +82,6 @@ namespace IntegrationTests
 
                     appContext.Boards.Add(new Board()
                     {
-                        Id = 2221,
                         Name = "MyNewboard",
                         Description = "My new board.",
                         IsPublic = true,
@@ -94,7 +90,6 @@ namespace IntegrationTests
 
                     appContext.Boards.Add(new Board()
                     {
-                        Id = 2222,
                         Name = "MyNewboardyy",
                         Description = "My new boardyy",
                         IsPublic = true,
