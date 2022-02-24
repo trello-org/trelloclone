@@ -67,18 +67,19 @@ namespace IntegrationTests
                         Username = "MySpecialUsername1",
                         Password = "MySpecialPassword1"
                     });
+                    appContext.SaveChanges();
                     appContext.Users.Add(new User()
                     {
                         Username = "MySpecialUsername2",
                         Password = "MySpecialPassword2"
                     });
-
+                    appContext.SaveChanges();
                     appContext.Users.Add(new User()
                     {
                         Username = "MySpecialUsername3",
                         Password = "MySpecialPassword3"
                     });
-
+                    appContext.SaveChanges();
 
                     appContext.Boards.Add(new Board()
                     {
@@ -87,7 +88,7 @@ namespace IntegrationTests
                         IsPublic = true,
                         UserId = 1116
                     });
-
+                    appContext.SaveChanges();
                     appContext.Boards.Add(new Board()
                     {
                         Name = "MyNewboardyy",
