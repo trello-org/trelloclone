@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31112.23
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrelloClone.API", "TrelloClone\TrelloClone.API.csproj", "{B3A3A37F-8CCD-4F66-9A54-036E726A4F8C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrelloClone.API", "TrelloClone.API\TrelloClone.API.csproj", "{B3A3A37F-8CCD-4F66-9A54-036E726A4F8C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "DomainLayer\Domain.csproj", "{EFD58649-9089-45C5-813D-4CDED73834DB}"
 EndProject
