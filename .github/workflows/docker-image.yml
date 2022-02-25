@@ -11,17 +11,12 @@ env:
 
 jobs:
 
-  build:
+  deploy:
 
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Build the Docker image
-      run: docker build . --file ./TrelloClone.API/Dockerfile --tag my-docker-image
-    - name: check if image is built
-      run: docker images
-    
+    - uses: actions/checkout@v2 
     - uses: akhileshns/heroku-deploy@v3.12.12 # This is the actionn
       with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
