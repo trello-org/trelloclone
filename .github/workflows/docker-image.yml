@@ -15,4 +15,14 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Build the Docker image
-      run: docker build . --file ./TrelloClone.API/Dockerfile --tag my-image-name:$(date +%s)
+      run: docker build . --file ./TrelloClone.API/Dockerfile --tag my-docker-image
+    - uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
+      with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: ${{secrets.HEROKU_APP_NAME}} #Must be unique in Heroku
+          heroku_email: ${{secrets.HEROKU_EMAIL}}
+          justlogin: true
+    - name: Publish
+      run: |
+        heroku container:push web -a my-docker-image
+        heroku container:release web -a my-docker-image
