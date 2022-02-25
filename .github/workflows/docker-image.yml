@@ -6,9 +6,6 @@ on:
   pull_request:
     branches: [ docker-final ]
     
-env:
-  push_url: ${{secrets.HEROKU_APP_NAME}}
-
 jobs:
 
   deploy:
