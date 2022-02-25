@@ -21,16 +21,19 @@ jobs:
       run: docker build . --file ./TrelloClone.API/Dockerfile --tag my-docker-image
     - name: check if image is built
       run: docker images
-    - name: tag and push 
-      run : |
-        docker tag my-docker-image registry.heroku.com/$push_url/web
-        docker push registry.heroku.com/$push_url/web
+    
     - uses: akhileshns/heroku-deploy@v3.12.12 # This is the actionn
       with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: ${{secrets.HEROKU_APP_NAME}} #Must be unique in Heroku
           heroku_email: ${{secrets.HEROKU_EMAIL}}
           justlogin: true
+          
+    - name: tag and push 
+      run : |
+        docker tag my-docker-image registry.heroku.com/$push_url/web
+        docker push registry.heroku.com/$push_url/web
+        
     - name: Publish
       run: |
         heroku container:push web -a ${{secrets.HEROKU_APP_NAME}}
