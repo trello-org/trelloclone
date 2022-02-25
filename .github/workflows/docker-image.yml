@@ -16,6 +16,7 @@ jobs:
     - uses: actions/checkout@v2
     - name: Build the Docker image
       run: docker build . --file ./TrelloClone.API/Dockerfile --tag my-docker-image
+    - name: check if image is built
       run: docker images
     - uses: akhileshns/heroku-deploy@v3.12.12 # This is the actionn
       with:
