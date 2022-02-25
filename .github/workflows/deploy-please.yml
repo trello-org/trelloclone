@@ -1,22 +1,19 @@
-name: Docker Image CI
+name: Dockerize n Deploy
 
 on:
   push:
-    branches: [ docker-final ]
-  pull_request:
-    branches: [ docker-final ]
-    
+    branches:
+      - docker-final
+
 jobs:
-
-  deploy:
-
+  build:
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v2 
-    - uses: akhileshns/heroku-deploy@v3.12.12 # This is the actionn
-      with:
+      - uses: actions/checkout@v2
+      - uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
+        with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: ${{secrets.HEROKU_APP_NAME}} #Must be unique in Heroku
           heroku_email: ${{secrets.HEROKU_EMAIL}}
           usedocker: true
+          branch: "docker-final"
