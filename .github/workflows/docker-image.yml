@@ -24,5 +24,5 @@ jobs:
           justlogin: true
     - name: Publish
       run: |
-        heroku container:push web -a my-docker-image
-        heroku container:release web -a my-docker-image
+        heroku container:push web -a ${{secrets.HEROKU_APP_NAME}}
+        heroku container:release web -a ${{secrets.HEROKU_APP_NAME}}
