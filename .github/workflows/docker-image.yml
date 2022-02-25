@@ -28,10 +28,8 @@ jobs:
           heroku_app_name: ${{secrets.HEROKU_APP_NAME}} #Must be unique in Heroku
           heroku_email: ${{secrets.HEROKU_EMAIL}}
           justlogin: true
-    - run: heroku auth:whoami
-
     - run : |
- 
+        heroku auth:whoami
         docker tag my-docker-image registry.heroku.com/trello-clonito/web
         docker push registry.heroku.com/trello-clonito/web
         heroku container:push web -a ${{secrets.HEROKU_APP_NAME}}
