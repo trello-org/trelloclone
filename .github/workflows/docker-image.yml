@@ -30,6 +30,7 @@ jobs:
           justlogin: true
     - run : |
         heroku auth:whoami
+        heroku container:login
         docker tag my-docker-image registry.heroku.com/trello-clonito/web
         docker push registry.heroku.com/trello-clonito/web
         heroku container:push web -a ${{secrets.HEROKU_APP_NAME}}
