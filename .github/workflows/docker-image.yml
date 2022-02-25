@@ -31,7 +31,7 @@ jobs:
     - run: heroku auth:whoami
 
     - run : |
-        run: docker login --username=_ --password=$HEROKU_API_KEY registry.heroku.com
+        docker login --username=_ --password=$HEROKU_API_KEY registry.heroku.com
         docker tag my-docker-image registry.heroku.com/trello-clonito/web
         docker push registry.heroku.com/trello-clonito/web
         heroku container:push web -a ${{secrets.HEROKU_APP_NAME}}
