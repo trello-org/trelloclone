@@ -31,8 +31,8 @@ jobs:
           
     - name: tag and push 
       run : |
-        docker tag my-docker-image registry.heroku.com/$push_url/web
-        docker push registry.heroku.com/$push_url/web
+        docker tag my-docker-image registry.heroku.com/trello-clonito/web
+        docker push registry.heroku.com/trello-clonito/web
         
     - name: Publish
       run: |
